@@ -61,3 +61,14 @@ class PaiementFournisseur(models.Model):
     def __str__(self):
         return f"Paiement Fournisseur {self.numero_paiement_fournisseur}"
     
+class AnalyseDesVentes(models.Model):
+    annee = models.IntegerField()
+    mois = models.IntegerField()
+    taux_evolution_ventes = models.FloatField(max_length=30)
+    taux_evolution_benefice = models.FloatField(max_length=30)
+    top_clients = models.TextField()
+    best_sellers = models.TextField()
+
+    def str(self):
+        return f"Analyse des Ventes {self.annee} - {self.mois}"
+    
