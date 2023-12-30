@@ -42,3 +42,12 @@ class Transfert(models.Model):
     def __str__(self):
         return f"Transfert {self.numero_transfert}"
     
+class PaiementFournisseur(models.Model):
+    numero_paiement_fournisseur = models.AutoField(primary_key=True)
+    date_paiement_fournisseur = models.DateField()
+    montant_paiement_fournisseur = models.FloatField(max_length=30)
+    fournisseur = models.ForeignKey(Fournisseur, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Paiement Fournisseur {self.numero_paiement_fournisseur}"
+    

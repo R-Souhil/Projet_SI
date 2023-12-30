@@ -21,7 +21,7 @@ class Employe(models.Model):
     prenom_employe = models.CharField(max_length=30)
     adresse_employe = models.TextField()
     telephone_employe = models.CharField(max_length=20)
-    salaire_jour = models.DecimalField(max_length=30)
+    salaire_jour = models.FloatField(max_length=30)
     centre = models.ForeignKey(Centre, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -60,3 +60,12 @@ class PV(models.Model):
 
     def __str__(self):
         return f"PV {self.numero_pv}"
+    
+class PaiementCreditClient(models.Model):
+    numero_paiement_credit_client = models.AutoField(primary_key=True)
+    date_paiement_credit_client = models.DateField()
+    montant_paiement_credit_client = models.FloatField(max_length=30)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Paiement Crédit Client {self.numero_paiement_credit_client}"
