@@ -1,6 +1,7 @@
 from django.db import models
 from centre.models import Produit, Centre, Client
 
+
 class Magasin(models.Model):
     code_magasin = models.AutoField(primary_key=True)
     nom_magasin = models.CharField(max_length=50)
@@ -62,3 +63,12 @@ class AnalyseDesVentes(models.Model):
     def str(self):
         return f"Analyse des Ventes {self.annee} - {self.mois}"
     
+
+class AnalyseDesAchats(models.Model):
+    annee = models.IntegerField(primary_key=True)
+    mois = models.IntegerField(primary_key=True)
+    taux_evolution_achats = models.FloatField(max_length=30)
+    top_fournisseurs = models.TextField()
+
+    def str(self):
+        return f"Analyse des Achats {self.annee} - {self.mois}"
