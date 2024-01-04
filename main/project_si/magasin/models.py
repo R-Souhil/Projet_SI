@@ -8,7 +8,7 @@ class Magasin(models.Model):
     adresse_magasin = models.TextField()
 
     def __str__(self):
-        return f"Magasin: {self.nom_magasin}"
+        return self.nom_magasin
   
 class Fournisseur(models.Model):
     code_fournisseur = models.AutoField(primary_key=True)
@@ -19,7 +19,7 @@ class Fournisseur(models.Model):
     solde_fournisseur = models.FloatField(max_length=30)
 
     def __str__(self):
-        return f"Fournisseur: {self.nom_fournisseur} {self.prenom_fournisseur}"
+        return self.nom_fournisseur+" "+self.prenom_fournisseur
 
 class Achat(models.Model):
     numero_achat = models.AutoField(primary_key=True)
@@ -30,7 +30,7 @@ class Achat(models.Model):
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Achat {self.numero_achat}"
+        return self.numero_achat
     
 class Transfert(models.Model):
     numero_transfert = models.AutoField(primary_key=True)
@@ -41,7 +41,7 @@ class Transfert(models.Model):
     centre = models.ForeignKey(Centre, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Transfert {self.numero_transfert}"
+        return self.numero_transfert
     
 class PaiementFournisseur(models.Model):
     numero_paiement_fournisseur = models.AutoField(primary_key=True)
@@ -50,7 +50,7 @@ class PaiementFournisseur(models.Model):
     fournisseur = models.ForeignKey(Fournisseur, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Paiement Fournisseur {self.numero_paiement_fournisseur}"
+        return self.numero_paiement_fournisseur
     
 class AnalyseDesVentes(models.Model):
     annee = models.IntegerField()
@@ -61,14 +61,14 @@ class AnalyseDesVentes(models.Model):
     best_sellers = models.TextField()
 
     def str(self):
-        return f"Analyse des Ventes {self.annee} - {self.mois}"
+        return self.annee+"-"+self.mois
     
 
 class AnalyseDesAchats(models.Model):
-    annee = models.IntegerField(primary_key=True)
-    mois = models.IntegerField(primary_key=True)
+    annee = models.IntegerField
+    mois = models.IntegerField
     taux_evolution_achats = models.FloatField(max_length=30)
     top_fournisseurs = models.TextField()
 
     def str(self):
-        return f"Analyse des Achats {self.annee} - {self.mois}"
+        return self.annee+"-"+self.mois

@@ -2,10 +2,10 @@ from django.db import models
 
 class Centre(models.Model):
     code_centre = models.AutoField(primary_key=True)
-    désignation = models.CharField(max_length=50)
+    designation = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"Centre {self.désignation}"
+        return self.designation
     
 class Produit(models.Model):
     code_produit = models.AutoField(primary_key=True)
@@ -13,7 +13,7 @@ class Produit(models.Model):
     prix_achat_unitaire_HT = models.FloatField(max_length=30)
 
     def __str__(self):
-        return f"Produit: {self.designation_produit}"
+        return self.designation_produit
     
 class Employe(models.Model):
     code_employe = models.AutoField(primary_key=True)
@@ -25,7 +25,7 @@ class Employe(models.Model):
     centre = models.ForeignKey(Centre, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Employé: {self.nom_employe} {self.prenom_employe}"
+        return self.nom_employe+" "+self.prenom_employe
     
 class Client(models.Model):
     code_client = models.AutoField(primary_key=True)
@@ -36,7 +36,7 @@ class Client(models.Model):
     credit_client = models.FloatField(max_length=30)
 
     def __str__(self):
-        return f"Client: {self.nom_client} {self.prenom_client}"
+        return self.nom_client+" "+self.prenom_client
   
 class Vente(models.Model):
     numero_vente = models.AutoField(primary_key=True)
@@ -47,7 +47,7 @@ class Vente(models.Model):
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Vente {self.numero_vente}"
+        return self.numero_vente
     
 class PV(models.Model):
     numero_pv = models.AutoField(primary_key=True)
@@ -59,7 +59,7 @@ class PV(models.Model):
     centre = models.ForeignKey(Centre, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"PV {self.numero_pv}"
+        return self.numero_pv
     
 class PaiementCreditClient(models.Model):
     numero_paiement_credit_client = models.AutoField(primary_key=True)
@@ -68,4 +68,4 @@ class PaiementCreditClient(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Paiement Crédit Client {self.numero_paiement_credit_client}"
+        return self.numero_paiement_credit_client

@@ -5,6 +5,12 @@ from .models import Fournisseur
 
 # Create your views here.
 
+def inv_magasin(request):
+    return render(request, 'inv_magasin.html')
+
+
+
+
 
 def ajouter_fournisseur(request):
     if request.method == 'POST':
