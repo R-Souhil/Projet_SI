@@ -10,17 +10,17 @@
     
     <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
 
-    <title>Produits</title>
+    <title>Clients</title>
   </head>
   <body>
     {% include 'header.html' %}
-    <h3>Modifier un produit</h3>
+    <h3>Modifier un client</h3>
     <div class="EDITForm">
     <form method="POST">
       {% csrf_token %} {{ form.as_p}}
       <div class="btns">
         <input id="Confirm" type="submit" value="Modifier" />
-        <a id="Annuler" href=" {% url 'listeP' %}"> Annuler</a>
+        <a id="Annuler" href=" {% url 'listeCl' %}"> Annuler</a>
       </div>
     </form>
     </div>

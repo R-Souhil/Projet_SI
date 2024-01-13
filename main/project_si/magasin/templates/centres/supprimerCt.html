@@ -10,20 +10,19 @@
     
     <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
 
-    <title>Produits</title>
+    <title>Centres</title>
   </head>
   <body>
     {% include 'header.html' %}
-    <h3>Modifier un produit</h3>
-    <div class="EDITForm">
+    <div class="SuppPage">
+    <h3>Supprimer un Centre</h3>
     <form method="POST">
-      {% csrf_token %} {{ form.as_p}}
-      <div class="btns">
-        <input id="Confirm" type="submit" value="Modifier" />
-        <a id="Annuler" href=" {% url 'listeP' %}"> Annuler</a>
-      </div>
+        {% csrf_token %}
+        <p id="ConfirmationMsg">Êtes-vous sûr de vouloir supprimer le Centre : <strong> {{item.designation_centre}} </strong> ?</p>
+        <a id="Annuler" href="{% url 'listeCt' %}">Annuler</a>
+        <input id="SuppBtn" type="submit" value="Supprimer" />
     </form>
-    </div>
+  </div>
   </body>
 
   <script src="{% static 'javascript/script.js' %}"></script>

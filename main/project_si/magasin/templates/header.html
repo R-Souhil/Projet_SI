@@ -4,57 +4,44 @@
     <ul class="favorite-tabs">
      
    <span class="dropdown">
-        <li id="nav" data-bs-toggle="dropdown" aria-expanded="false">Analyse</li>
+        <li id="nav" data-bs-toggle="dropdown" aria-expanded="false">Magasin</li>
         <ul class="dropdown-menu">
-          <li onclick="window.location.href='/analyse/achat/'">Analyse Achat</li>
-          <li onclick="window.location.href='/analyse/vente/'">Analyse Vente</li>
+          <li onclick="window.location.href='/produits'">Produits</li>
+          <li onclick="window.location.href='/clients'">Clients</li>
+          <li onclick="window.location.href='/fournisseurs'">Fournisseurs</li>
+          <li onclick="window.location.href='/centres'">Centres</li>
+          <li onclick="window.location.href='/employes'">Employes</li>
         </ul>
       </span>
-
-   
-
-
-      <span class="dropdown">
-        <li id="nav" data-bs-toggle="dropdown" aria-expanded="false">Vente</li>
-        <ul class="dropdown-menu">
-          <li onclick="window.location.href='/vente'">Consulter les Ventes</li>
-          <li onclick="window.location.href='/paiementcredit'">Paiements Crédit</li>
-        </ul>
-      </span>
-        
-        
-
 
       <span class="dropdown">
         <li id="nav" data-bs-toggle="dropdown" aria-expanded="false">Achat</li>
         <ul class="dropdown-menu">
-          <li onclick="window.location.href='/bondecommande'">Bon de Commande</li>
-          <li onclick="window.location.href='/bondelivraison'">Bon de Livraison</li>
-          <li onclick="window.location.href='/facture'">Facture</li>
-          <li onclick="window.location.href='/reglement'">Réglement</li>
+          <li onclick="window.location.href='/'">Nouvel Achat</li>
+          <li onclick="window.location.href='/'">Liste Achats</li>
+          <li onclick="window.location.href='/'">Règlement</li>
         </ul>
       </span>
       
       <span class="dropdown">
-        <li id="nav" data-bs-toggle="dropdown" aria-expanded="false">Gestion</li>
+        <li id="nav" data-bs-toggle="dropdown" aria-expanded="false">Transfert</li>
         <ul class="dropdown-menu">
-          <li onclick="window.location.href='/products'">Produits</li>
-          <li onclick="window.location.href='/typeproducts'">Catégories</li>
-          <li onclick="window.location.href='/clients'">Clients</li>
-          <li onclick="window.location.href='/suppliers'">Fournisseurs</li>
+          <li onclick="window.location.href='/'">Nouveau Transfert</li>
+          <li onclick="window.location.href='/'">Liste Transferts</li>
         </ul>
       </span>
-
-      <li id="nav" onclick="window.location.href='/stock'">Stock</li>
-
 
       <span class="dropdown">
-        <li id="nav" data-bs-toggle="dropdown" aria-expanded="false">{{ user.username }}</li>
+        <li id="nav" data-bs-toggle="dropdown" aria-expanded="false">Vente</li>
         <ul class="dropdown-menu">
-          <li onclick="window.location.href='/myaccount'">Mon Compte</li>
-          <li onclick="window.location.href='/logout'">Se Déconnecter</li>
+          <li onclick="window.location.href='/'">Nouvelle Vente</li>
+          <li onclick="window.location.href='/'">Liste Ventes</li>
+          <li onclick="window.location.href='/'">Paiement Crédit</li>
         </ul>
       </span>
+
+      <li id="nav" onclick="window.location.href='/'">Stock</li>
+
     </ul>
   </nav>
 </body>

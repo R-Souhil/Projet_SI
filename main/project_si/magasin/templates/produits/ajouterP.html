@@ -1,6 +1,6 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+  {% load static %}
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -14,18 +14,21 @@
   </head>
   <body>
     {% include 'header.html' %}
-    <h3>Modifier un produit</h3>
-    <div class="EDITForm">
-    <form method="POST">
-      {% csrf_token %} {{ form.as_p}}
-      <div class="btns">
-        <input id="Confirm" type="submit" value="Modifier" />
-        <a id="Annuler" href=" {% url 'listeP' %}"> Annuler</a>
-      </div>
-    </form>
-    </div>
-  </body>
+    <h4>Ajouter un Produit </h4>
 
-  <script src="{% static 'javascript/script.js' %}"></script>
+    <div class="ADDForm">
+      <form method="POST">
+        {% csrf_token %} {{ form.as_p}}
+        <div class="btns">
+          <input id="Confirm" type="submit" value="Modifier" />
+          <a id="Annuler" href=" {% url 'listeP' %}"> Annuler</a>
+        </div>
+      </form>
+    </div>
+    
+    <script src="{% static 'javascript/script.js' %}"></script>
+</body>
+
+
 
 </html>

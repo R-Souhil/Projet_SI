@@ -10,11 +10,11 @@
     
     <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
 
-    <title>Produits</title>
+    <title>Fournisseurs</title>
   </head>
   <body>
     {% include 'header.html' %}
-    <h4>Ajouter un Produit </h4>
+    <h4>Ajouter un Fournisseur </h4>
 
     <div class="ADDForm">
       <form  method="POST">
@@ -22,7 +22,7 @@
           {{ form.as_p }}
           <div class="btns">
             <input id="Confirm" type="submit" value="Valider">
-            <a id="Annuler" href=" {% url 'listeP' %}"> Annuler</a>
+            <a id="Annuler" href=" {% url 'listeF' %}"> Annuler</a>
           </div>
       </form>
     </div>
