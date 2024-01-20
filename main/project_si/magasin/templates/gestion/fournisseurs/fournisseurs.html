@@ -10,11 +10,11 @@
     
     <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
 
-    <title>Employes</title>
+    <title>Fournisseurs</title>
   </head>
   <body>
     {% include 'header.html' %}
-    <h4 class="display-5 d-inline">Liste des Employes :</h4>
+    <h4 class="display-5 d-inline">Liste des Fournisseurs :</h4>
 
     {% if messages %}
     <div class="messages">
@@ -29,28 +29,29 @@
       type="text"
       id="myInput"
       onkeyup="SearchBar()"
-      placeholder="Rechercher un Employe ..."
+      placeholder="Rechercher un Fournisseur ..."
     />
     <table class="table trecherche">
       <thead>
-        <th>Code_E</th>
+        <th>Code_F</th>
         <th>Nom</th>
         <th>Prenom</th>
-        <th>Centre</th>
+        <th>Solde</th>
         <th class="hid">Actions</th>
         <th class="hid"></th>
       </thead>
-      {% for employe in employes %}
+      {% for fournisseur in fournisseurs %}
       <tbody>
         <tr data-aos="fade-right" data-aos-anchor-placement="bottom-bottom">
-          <td>{{employe.code_employe}}</td>
-          <td>{{employe.designation_employe}}</td>
-          <td>{{employe.prix_achat_unitaire_HT}}</td>
+          <td>{{fournisseur.code_fournisseur}}</td>
+          <td>{{fournisseur.nom_fournisseur}}</td>
+          <td>{{fournisseur.prenom_fournisseur}}</td>
+          <td>{{fournisseur.solde_fournisseur|floatformat:2}}</td>
           <td class="hid">
-            <a class="btn btn-secondary" href="{% url 'modifierE' employe.code_employe %}">
+            <a class="btn btn-secondary" href="{% url 'modifierF' fournisseur.code_fournisseur %}">
               Modifier
             </a>
-            <a class="btn btn-danger" href="{% url 'supprimerE' employe.code_employe %}">
+            <a class="btn btn-danger" href="{% url 'supprimerF' fournisseur.code_fournisseur %}">
               Supprimer
             </a>
           </td>
@@ -62,7 +63,8 @@
 
     </table>
     <div style="display: flex;flex-direction: column;align-items: flex-end;">
-    <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterE' %}">Ajouter un nouveau Employe</a> 
+    <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterF' %}">Ajouter un nouveau Fournisseur</a> 
+    <button style="background-color: purple;float: right;margin-right: 25px; width: 18%;margin-bottom: 20px;" id="print-button" class="btn btn-primary" >Imprimer</button>
     </div>
   </body>
   <script src="{% static 'javascript/script.js' %}"></script>

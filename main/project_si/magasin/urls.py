@@ -27,5 +27,11 @@ urlpatterns = [
     path('fournisseurs/ajouter',views.ajouter_fournisseur, name='ajouterF'),
     path('fournisseurs/supprimer/<int:pid>/',views.supprimer_fournisseur, name='supprimerF'),
     path('fournisseurs/modifier/<int:pid>/',views.modifier_fournisseur, name='modifierF'),
+    ## url achats
+    path('achats/',views.liste_achats, name='listeA'),
+    path('achats/ajouter',views.ajouter_achat, name='ajouterA'),
+    path('achats/supprimer/<int:pid>/',views.supprimer_achat, name='supprimerA'),
+    path('reglement/',views.liste_reglements, name='listeReg'),
+    path('reglement/paiement/<int:pid>/',views.paiement_fournisseur, name='paiementFrn'),
     
 ]

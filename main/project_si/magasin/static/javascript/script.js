@@ -37,12 +37,46 @@ function checkboxChanged(checkbox) {
         for (var i = 1; i < inputs.length; i++) {
             inputs[i].disabled = false;
         }
+
     } else {
         row.style.backgroundColor = "#2a292e";
         for (var i = 1; i < inputs.length; i++) {
             inputs[i].disabled = true;
         }
     }
+    var quantityInput = document.getElementsByName("quantite_" + checkbox.value)[0];
+    quantityInput.disabled = !checkbox.checked;
+
+    updateTotal();
+}
+
+
+function updateTotal() {
+    var checkboxes = document.getElementsByName("produits");
+    var totalAmount = 0;
+    var montantPaye = document.getElementById("paymentfrn");
+
+    for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+            var quantityInput = document.getElementsByName("quantite_" + checkboxes[i].value)[0];
+            var price = parseFloat(checkboxes[i].parentNode.previousElementSibling.textContent);
+            var partialAmount = price * parseFloat(quantityInput.value);
+            totalAmount += partialAmount;
+        }
+    }
+
+    var totalQuantityInput = document.getElementById("montant");
+    if (totalQuantityInput) {
+        totalQuantityInput.value = totalAmount.toFixed(2);
+    }
+    montantPaye.max=totalAmount;
+}
+
+  function checkboxChanged(checkbox) {
+    var quantityInput = document.getElementsByName("quantite_" + checkbox.value)[0];
+    quantityInput.disabled = !checkbox.checked;
+
+    updateTotal();
 }
 
 

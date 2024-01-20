@@ -10,11 +10,11 @@
     
     <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
 
-    <title>Centres</title>
+    <title>Employes</title>
   </head>
   <body>
     {% include 'header.html' %}
-    <h4 class="display-5 d-inline">Mes Centres :</h4>
+    <h4 class="display-5 d-inline">Liste des Employes :</h4>
 
     {% if messages %}
     <div class="messages">
@@ -29,25 +29,28 @@
       type="text"
       id="myInput"
       onkeyup="SearchBar()"
-      placeholder="Rechercher un Centre ..."
+      placeholder="Rechercher un Employe ..."
     />
     <table class="table trecherche">
       <thead>
-        <th>Code Centre</th>
-        <th>Nom Centre</th>
+        <th>Code_E</th>
+        <th>Nom</th>
+        <th>Prenom</th>
+        <th>Centre</th>
         <th class="hid">Actions</th>
         <th class="hid"></th>
       </thead>
-      {% for centre in centres %}
+      {% for employe in employes %}
       <tbody>
         <tr data-aos="fade-right" data-aos-anchor-placement="bottom-bottom">
-          <td>{{centre.code_centre}}</td>
-          <td>{{centre.designation_centre}}</td>
+          <td>{{employe.code_employe}}</td>
+          <td>{{employe.designation_employe}}</td>
+          <td>{{employe.prix_achat_unitaire_HT|floatformat:2}}</td>
           <td class="hid">
-            <a class="btn btn-secondary" href="{% url 'modifierCt' centre.code_centre %}">
+            <a class="btn btn-secondary" href="{% url 'modifierE' employe.code_employe %}">
               Modifier
             </a>
-            <a class="btn btn-danger" href="{% url 'supprimerCt' centre.code_centre %}">
+            <a class="btn btn-danger" href="{% url 'supprimerE' employe.code_employe %}">
               Supprimer
             </a>
           </td>
@@ -59,7 +62,8 @@
 
     </table>
     <div style="display: flex;flex-direction: column;align-items: flex-end;">
-    <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterCt' %}">Ajouter un nouveau Centre</a> 
+    <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterE' %}">Ajouter un nouveau Employe</a> 
+    <button style="background-color: purple;float: right;margin-right: 25px; width: 18%;margin-bottom: 20px;" id="print-button" class="btn btn-primary" >Imprimer</button>
     </div>
   </body>
   <script src="{% static 'javascript/script.js' %}"></script>

@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'javascript/script.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>Liste Achats</title>
+  </head>
+  <body>
+    {% include 'header.html' %}
+    <h4 class="display-5 d-inline">Liste des Achats</h4>
+    <input
+    class="hid search"
+      type="text"
+      id="myInput"
+      onkeyup="SearchBar()"
+      placeholder="Par Fournisseur ..."
+    />
+    <table class="table trecherche">
+      <thead>
+        <th>Achat N°</th>
+        <th>Fournisseur</th>
+        <th>Montant</th>
+        <th>Date Achat</th>
+        <th class="hid">Actions</th>
+      </thead>
+      {% for a in achats %}
+      <tbody>
+        <tr data-aos="fade-right" data-aos-anchor-placement="bottom-bottom">
+          <td>{{a.numero_achat}}</td>
+          <td>{{a.fournisseur}}</td>
+          <td>{{a.montant_total_HT|floatformat:2}}</td>
+          <td>{{a.date_achat}}</td>
+          <td class="hid">
+            <a class="btn btn-danger" href="{% url 'supprimerA' a.numero_achat %}">Delete</a>
+          </td>
+        </tr>
+        {% endfor%}  
+      </tbody> 
+    </table>
+    <div style="display: flex;flex-direction: column;align-items: flex-end;">
+    <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterA' %}">Ajouter un nouvel Achat</a>
+    <button style="background-color: purple;float: right;margin-right: 25px; width: 18%;margin-bottom: 20px;" id="print-button" class="btn btn-primary" >Imprimer</button>
+    </div>
+  </body>
+</html>

@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.validators import MinValueValidator
+from django.utils import timezone
 
 class Magasin(models.Model):
     code_magasin = models.AutoField(primary_key=True)
@@ -50,27 +52,46 @@ class Fournisseur(models.Model):
     code_fournisseur = models.AutoField(primary_key=True)
     nom_fournisseur = models.CharField(max_length=20)
     prenom_fournisseur = models.CharField(max_length=30)
-    adresse_fournisseur = models.TextField()
+    adresse_fournisseur = models.CharField(max_length=100)
     telephone_fournisseur = models.CharField(max_length=20)
-    solde_fournisseur = models.FloatField(max_length=30)
+    solde_fournisseur = models.FloatField(max_length=30,default=0)
 
     def __str__(self):
         return self.nom_fournisseur+" "+self.prenom_fournisseur
 
 class Achat(models.Model):
     numero_achat = models.AutoField(primary_key=True)
-    date_achat = models.DateField()
-    quantite_achetee = models.IntegerField()
-    montant_total_HT = models.FloatField(max_length=30)
+    date_achat = models.DateField(default=timezone.now)
+    montant_total_HT = models.FloatField(default=0)
+    montant_paye = models.FloatField(default=0)
     fournisseur = models.ForeignKey(Fournisseur, on_delete=models.CASCADE)
-    produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.numero_achat
+        return str(self.numero_achat)
+
+    ## relation entre Achat et Produit
+   
+class ProduitAchat(models.Model):
+    produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    achat = models.ForeignKey(Achat, on_delete=models.CASCADE)
+    quantite = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    montant_prd = models.FloatField()
+
+    def __str__(self):
+        return f"{self.produit.designation_produit} - {self.quantite} - {self.montant_total_HT}"
+    
+class PaiementFournisseur(models.Model):
+    numero_paiement_fournisseur = models.AutoField(primary_key=True)
+    date_paiement_fournisseur = models.DateField(default=timezone.now)
+    montant_paiement_fournisseur = models.FloatField(max_length=30)
+    fournisseur = models.ForeignKey(Fournisseur, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.numero_paiement_fournisseur
     
 class Transfert(models.Model):
     numero_transfert = models.AutoField(primary_key=True)
-    date_transfert = models.DateField()
+    date_transfert = models.DateField(default=timezone.now)
     quantite_transferee = models.IntegerField()
     cout_transfert = models.FloatField(max_length=30)
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
@@ -78,15 +99,6 @@ class Transfert(models.Model):
 
     def __str__(self):
         return self.numero_transfert
-    
-class PaiementFournisseur(models.Model):
-    numero_paiement_fournisseur = models.AutoField(primary_key=True)
-    date_paiement_fournisseur = models.DateField()
-    montant_paiement_fournisseur = models.FloatField(max_length=30)
-    fournisseur = models.ForeignKey(Fournisseur, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.numero_paiement_fournisseur
     
 class AnalyseDesVentes(models.Model):
     annee = models.IntegerField()
@@ -110,12 +122,10 @@ class AnalyseDesAchats(models.Model):
         return self.annee+"-"+self.mois
     
 
-    
-
   
 class Vente(models.Model):
     numero_vente = models.AutoField(primary_key=True)
-    date_vente = models.DateField()
+    date_vente = models.DateField(default=timezone.now)
     quantite_vendue = models.IntegerField()
     montant_total_vente = models.FloatField(max_length=30)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
@@ -126,7 +136,7 @@ class Vente(models.Model):
     
 class PV(models.Model):
     numero_pv = models.AutoField(primary_key=True)
-    date_pv = models.DateField()
+    date_pv = models.DateField(default=timezone.now)
     quantite_vendue_centre = models.IntegerField()
     montant_total_vente_centre = models.FloatField(max_length=30)
     avance_salaire_employe = models.FloatField(max_length=30)
@@ -138,7 +148,7 @@ class PV(models.Model):
     
 class PaiementCreditClient(models.Model):
     numero_paiement_credit_client = models.AutoField(primary_key=True)
-    date_paiement_credit_client = models.DateField()
+    date_paiement_credit_client = models.DateField(default=timezone.now)
     montant_paiement_credit_client = models.FloatField(max_length=30)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
 

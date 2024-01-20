@@ -8,9 +8,10 @@
     
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     
+    <script src="{% static 'javascript/script.js' %}"></script>
     <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
 
-    <title>Fournisseurs</title>
+    <title>Reglement</title>
   </head>
   <body>
     {% include 'header.html' %}
@@ -33,38 +34,40 @@
     />
     <table class="table trecherche">
       <thead>
-        <th>Code_F</th>
         <th>Nom</th>
-        <th>Prenom</th>
+        <th>Paiements</th>
         <th>Solde</th>
+        <th>Etat</th>
         <th class="hid">Actions</th>
         <th class="hid"></th>
       </thead>
-      {% for fournisseur in fournisseurs %}
+      {% for f in fournisseurs %}
       <tbody>
         <tr data-aos="fade-right" data-aos-anchor-placement="bottom-bottom">
-          <td>{{fournisseur.code_fournisseur}}</td>
-          <td>{{fournisseur.nom_fournisseur}}</td>
-          <td>{{fournisseur.prenom_fournisseur}}</td>
-          <td>{{fournisseur.solde_fournisseur}}</td>
-          <td class="hid">
-            <a class="btn btn-secondary" href="{% url 'modifierF' fournisseur.code_fournisseur %}">
-              Modifier
-            </a>
-            <a class="btn btn-danger" href="{% url 'supprimerF' fournisseur.code_fournisseur %}">
-              Supprimer
-            </a>
+          <td>{{f.nom_fournisseur}} {{f.prenom_fournisseur}}</td>
+          <td>{% for p in pays %}
+            {% if p.fournisseur.code_fournisseur == f.code_fournisseur %}
+            N°{{ p.numero_paiement_fournisseur }} : {{ p.montant_paiement_fournisseur }}DA <br>
+            {% endif %}
+            {% endfor%}  
           </td>
-          
+          <td>{{f.solde_fournisseur|floatformat:2}} DA</td>
+          {% if f.solde_fournisseur > 0.001 %}
+            <td class="badge bg-danger">Non Payé</td>
+            <td class="hid">
+              <a class="btn btn-secondary" href="{% url 'paiementFrn' f.code_fournisseur %}">
+                Payement
+              </a>
+            </td>
+          {% else %}
+            <td class="badge bg-success">Payé</td>
+          {% endif %}
         </tr>
         {% endfor%}  
-       
-      </tbody> 
-
+      </tbody>
     </table>
     <div style="display: flex;flex-direction: column;align-items: flex-end;">
-    <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterF' %}">Ajouter un nouveau Fournisseur</a> 
+    <button style="background-color: purple;float: right;margin-right: 25px; width: 18%;margin-bottom: 20px;" id="print-button" class="btn btn-primary" >Imprimer</button>
     </div>
   </body>
-  <script src="{% static 'javascript/script.js' %}"></script>
 </html>

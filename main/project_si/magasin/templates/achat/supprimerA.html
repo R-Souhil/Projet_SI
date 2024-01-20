@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    
+    <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
+
+    <title>Achats</title>
+  </head>
+  <body>
+    {% include 'header.html' %}
+    <div class="SuppPage">
+    <h3>Supprimer un Achat</h3>
+    <form method="POST">
+        {% csrf_token %}
+        <p id="ConfirmationMsg">Êtes-vous sûr de vouloir supprimer l'Achat de :</p>
+        <div style="display: flex; justify-content: center;">
+          <ul style="list-style-type: none;">
+            {% for produit in produits %}
+              <li>{{ produit.produit.designation_produit }} - x {{ produit.quantite }} - Montant: {{ produit.montant_prd|floatformat:2 }}</li>
+            {% endfor %}
+              <li>Montant Total: {{ item.montant_total_HT|floatformat:2 }}</li>
+          </ul>
+        </div>
+        <a id="Annuler" href="{% url 'listeA' %}">Annuler</a>
+        <input id="SuppBtn" type="submit" value="Supprimer" />
+    </form>
+  </div>
+  </body>
+</html>

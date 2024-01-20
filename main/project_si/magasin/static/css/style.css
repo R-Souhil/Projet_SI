@@ -84,6 +84,14 @@ ul{
     font-family: 'Raleway', sans-serif;
 }
 
+#print-button{
+    background-color: purple;
+    float: right;
+    margin-right: 25px;
+    width: 18%;
+    margin-bottom: 20px;
+}
+
 nav ul li:after{
     content: '';
     background: #eb8876;
@@ -193,9 +201,6 @@ td{
 
 #myInput {
     display: block;
-    background-image: url('/css/searchicon.png'); /* Add a search icon to input */
-    background-position: 10px 12px; /* Position the search icon */
-    background-repeat: no-repeat; /* Do not repeat the icon image */
     width: 40%; /* Full-width */
     font-size: 16px; /* Increase font-size */
     padding: 12px 20px 12px 40px; /* Add some padding */
@@ -224,14 +229,9 @@ td{
     background:#e9bcc6;
     border-radius: 10px;
     margin-left:10px;
-    padding: 10px;
+    padding: 5px;
     z-index: -1;
     transition: 0.5s;
-}
-
-#ADDProd{
-    position:relative;
-    top:40px;
 }
 
 #Annuler{
@@ -247,6 +247,12 @@ p:has(#id_remise){
     position:relative;
     top:30px;
 }
+
+.listeSupp{
+    list-style-type: "-";
+    padding: 0;
+}
+
 
 select[id="id_fournisseur"], select[id="id_type_produit"]{
     border-radius: 20px;

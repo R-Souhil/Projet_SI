@@ -10,11 +10,11 @@
     
     <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
 
-    <title>Clients</title>
+    <title>Produits</title>
   </head>
   <body>
     {% include 'header.html' %}
-    <h4 class="display-5 d-inline">Liste des Clients :</h4>
+    <h4 class="display-5 d-inline">Liste des Produits :</h4>
 
     {% if messages %}
     <div class="messages">
@@ -29,29 +29,27 @@
       type="text"
       id="myInput"
       onkeyup="SearchBar()"
-      placeholder="Rechercher un Client ..."
+      placeholder="Rechercher un Produit ..."
     />
     <table class="table trecherche">
       <thead>
-        <th>Code Client</th>
-        <th>Nom</th>
-        <th>Prenom</th>
-        <th>Crédit</th>
+        <th>Code Produit</th>
+        <th>Nom Produit</th>
+        <th>Prix</th>
         <th class="hid">Actions</th>
         <th class="hid"></th>
       </thead>
-      {% for client in clients %}
+      {% for produit in produits %}
       <tbody>
         <tr data-aos="fade-right" data-aos-anchor-placement="bottom-bottom">
-          <td>{{client.code_client}}</td>
-          <td>{{client.nom_client}}</td>
-          <td>{{client.prenom_client}}</td>
-          <td>{{client.credit_client}}</td>
+          <td>{{produit.code_produit}}</td>
+          <td>{{produit.designation_produit}}</td>
+          <td>{{produit.prix_achat_unitaire_HT|floatformat:2}}</td>
           <td class="hid">
-            <a class="btn btn-secondary" href="{% url 'modifierCl' client.code_client %}">
+            <a class="btn btn-secondary" href="{% url 'modifierP' produit.code_produit %}">
               Modifier
             </a>
-            <a class="btn btn-danger" href="{% url 'supprimerCl' client.code_client %}">
+            <a class="btn btn-danger" href="{% url 'supprimerP' produit.code_produit %}">
               Supprimer
             </a>
           </td>
@@ -63,7 +61,8 @@
 
     </table>
     <div style="display: flex;flex-direction: column;align-items: flex-end;">
-    <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterCl' %}">Ajouter un nouveau Client</a> 
+    <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterP' %}">Ajouter un nouveau Produit</a> 
+    <button style="background-color: purple;float: right;margin-right: 25px; width: 18%;margin-bottom: 20px;" id="print-button" class="btn btn-primary" >Imprimer</button>
     </div>
   </body>
   <script src="{% static 'javascript/script.js' %}"></script>

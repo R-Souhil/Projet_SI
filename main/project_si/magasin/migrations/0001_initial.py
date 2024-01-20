@@ -8,10 +8,6 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ('centre', '0001_initial'),
-    ]
-
     operations = [
         migrations.CreateModel(
             name='AnalyseDesAchats',
@@ -59,7 +55,7 @@ class Migration(migrations.Migration):
                 ('date_achat', models.DateField()),
                 ('quantite_achetee', models.IntegerField()),
                 ('montant_total_HT', models.FloatField(max_length=30)),
-                ('produit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='centre.produit')),
+                ('produit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='magasin.produit')),
                 ('fournisseur', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='magasin.fournisseur')),
             ],
         ),
@@ -79,8 +75,8 @@ class Migration(migrations.Migration):
                 ('date_transfert', models.DateField()),
                 ('quantite_transferee', models.IntegerField()),
                 ('cout_transfert', models.FloatField(max_length=30)),
-                ('centre', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='centre.centre')),
-                ('produit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='centre.produit')),
+                ('centre', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='magasin.centre')),
+                ('produit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='magasin.produit')),
             ],
         ),
     ]
