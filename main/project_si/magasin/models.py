@@ -102,19 +102,6 @@ class StockProduit(models.Model):
     stock = models.ForeignKey(Magasin, on_delete=models.CASCADE)
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
     qteDispo = models.PositiveIntegerField(default=0)
-    
-    def update_stock(self):
-        qte=0
-        pa=ProduitAchat.objects.filter(produit=self.produit)
-        for item in pa:
-            try:
-                prdstock=StockProduit.objects.get(produit=item.produit)
-            except:
-                prdstock=StockProduit.objects.create(produit=item.produit,stock=Magasin.objects.get(code_magasin=1))
-            qte += item.quantite
-        for item in pa:
-            qte += item.quantite
-        self.qteDispo = qte
 
     def save(self, *args, **kwargs):
         self.primary_key = str(self.stock) + str(self.produit)
@@ -163,6 +150,7 @@ class Vente(models.Model):
     date_vente = models.DateField(default=timezone.now)
     quantite_vendue = models.IntegerField()
     montant_total_vente = models.FloatField(max_length=30)
+    montant_recue = models.FloatField(max_length=30)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
 

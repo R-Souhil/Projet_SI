@@ -34,5 +34,9 @@ urlpatterns = [
     path('achats/supprimer/<int:pid>/',views.supprimer_achat, name='supprimerA'),
     path('reglement/',views.liste_reglements, name='listeReg'),
     path('reglement/paiement/<int:pid>/',views.paiement_fournisseur, name='paiementFrn'),
+    ## url ventes 
+    path('ventes/',views.liste_ventes, name='listeV'),
+    path('ventes/ajouter',views.ajouter_vente, name='ajouterV'),
+    path('ventes/supprimer/<int:pid>/',views.supprimer_vente, name='supprimerV'),
     
 ]

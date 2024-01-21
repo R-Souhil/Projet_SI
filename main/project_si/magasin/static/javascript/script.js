@@ -54,7 +54,8 @@ function checkboxChanged(checkbox) {
 function updateTotal() {
     var checkboxes = document.getElementsByName("produits");
     var totalAmount = 0;
-    var montantPaye = document.getElementById("paymentfrn");
+    var montantPaye = document.getElementById("paiementfrn");
+    var montantRecue = document.getElementById("paiementcl");
 
     for (var i = 0; i < checkboxes.length; i++) {
         if (checkboxes[i].checked) {
@@ -70,6 +71,7 @@ function updateTotal() {
         totalQuantityInput.value = totalAmount.toFixed(2);
     }
     montantPaye.max=totalAmount;
+    montantRecue.max=totalAmount;
 }
 
   function checkboxChanged(checkbox) {

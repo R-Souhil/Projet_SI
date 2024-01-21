@@ -10,19 +10,19 @@
     <script src="{% static 'javascript/script.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
-    <title>Nouvel Achat</title>
+    <title>Nouvelle Vente</title>
   </head>
 
   <body>
     {% include 'header.html' %}
-    <h4> Créer un nouvel Achat </h4>
+    <h4> Créer une nouvelle Vente </h4>
     
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <div style="display: flex;flex-direction: column;">
             <span>
-            <a id="ADDFr" href="#" onclick="window.open('{% url "ajouterF" %}', 'newwindow'); return false;">Ajouter un Fournisseur</a>
+            <a id="ADDFr" href="#" onclick="window.open('{% url "ajouterCl" %}', 'newwindow'); return false;">Ajouter un Fournisseur</a>
             </span>
             <span>
             <a id="ADDProd" href="#" onclick="window.open('{% url "ajouterP" %}', 'newwindow'); return false;">Ajouter un Produit</a>
@@ -45,18 +45,20 @@
             </tr>
           </thead>
           <tbody id="tb">
-            {% for produit in produits %}
+            {% for s in stock %}
               <tr>
-                <td>{{ produit.designation_produit }}</td>
-                <td>{{ produit.prix_achat_unitaire_HT|floatformat:2 }}</td>
-                <td><input type="checkbox" name="produits" onchange="checkboxChanged(this)" value="{{ produit.code_produit }}"></td>
+                <td>{{ s.produit.designation_produit }}</td>
+                <td>{{ s.produit.prix_achat_unitaire_HT|floatformat:2 }}</td>
+                <td><input type="number" name="prix_{{ s.produit.code_produit }}" value="1" min="{{ s.produit.prix_achat_unitaire_HT|floatformat:2 }}" disabled onchange="updateTotal()"></td>
 
-                <td><input type="number" name="quantite_{{ produit.code_produit }}" value="1" disabled onchange="updateTotal()"></td>
+                <td><input type="checkbox" name="produits" onchange="checkboxChanged(this)" value="{{ s.produit.code_produit }}"></td>
+
+                <td><input type="number" name="quantite_{{ s.produit.code_produit }}" value="1" disabled onchange="updateTotal()"></td>
               </tr>
             {% endfor %}
               <tr>
-                <td><strong>Vous Payer :</strong></td>
-                <td><input type="number" name="sommepaye" id="paiementfrn" min="0" step="0.01"></td>
+                <td><strong>Vous Recevez :</strong></td>
+                <td><input type="number" name="sommerecue" id="paiementcl" min="0" step="0.01"></td>
                 <td><strong>Total</strong></td>
                 <td><input type="number" name="montantT" id="montant" readonly></td>  
               </tr>

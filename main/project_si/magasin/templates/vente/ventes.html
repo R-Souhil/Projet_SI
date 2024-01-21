@@ -10,11 +10,11 @@
     <script src="{% static 'javascript/script.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
-    <title>Liste Achats</title>
+    <title>Liste Ventes</title>
   </head>
   <body>
     {% include 'header.html' %}
-    <h4 class="display-5 d-inline">Liste des Achats</h4>
+    <h4 class="display-5 d-inline">Liste des Ventes</h4>
     <input
     class="hid search"
       type="text"
@@ -24,34 +24,34 @@
     />
     <table class="table trecherche">
       <thead>
-        <th>Achat N°</th>
-        <th>Fournisseur</th>
+        <th>N°</th>
+        <th>Client</th>
         <th>Montant</th>
-        <th>Date Achat</th>
+        <th>Date Vente</th>
         <th class="hid">Actions</th>
       </thead>
-      {% for a in achats %}
+      {% for v in ventes %}
       <tbody>
         <tr data-aos="fade-right" data-aos-anchor-placement="bottom-bottom">
-          <td>{{a.numero_achat}}</td>
-          <td>{{a.fournisseur}}</td>
-          <td>{{a.montant_total_HT|floatformat:2}} DA</td>
-          <td>{{a.date_achat}}</td>
+          <td>{{v.numero_vente}}</td>
+          <td>{{v.client.nom_client}} {{v.client.prenom_client}}</td>
+          <td>{{v.montant_total_vente|floatformat:2}} DA</td>
+          <td>{{v.date_vente}}</td>
           <td class="hid">
-            <a class="btn btn-danger" href="{% url 'supprimerA' a.numero_achat %}">Delete</a>
+            <a class="btn btn-danger" href="{% url 'supprimerV' v.numero_vente %}">Delete</a>
           </td>
         </tr>
         {% endfor%} 
         <tr> 
             <td colspan="1"></td>
-            <td>Total des Achats :</td>
+            <td>Total des Ventes :</td>
             <td>{{ montant_total_global|floatformat:2 }} DA</td>
             <td class="hid"></td>
         </tr>
       </tbody> 
     </table>
     <div style="display: flex;flex-direction: column;align-items: flex-end;">
-    <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterA' %}">Ajouter un nouvel Achat</a>
+    <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterV' %}">Ajouter une nouvelle Vente</a>
     <button style="background-color: purple;float: right;margin-right: 25px; width: 18%;margin-bottom: 20px;" id="print-button" class="btn btn-primary" >Imprimer</button>
     </div>
   </body>

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import Magasin, Centre, Client, Produit, ProduitAchat, Employe, Vente, PV, StockProduit, PaiementCreditClient, Fournisseur, Achat, Transfert, PaiementFournisseur, AnalyseDesVentes, AnalyseDesAchats
-from .forms import ProduitForm, ClientForm, EmployeForm, CentreForm, FournisseurForm, AchatForm, PaiementFournisseurForm
+from .forms import ProduitForm, ClientForm, EmployeForm, CentreForm, VenteForm, FournisseurForm, AchatForm, PaiementFournisseurForm
 
 
 
@@ -332,5 +332,55 @@ def magasin(request):
     sp=StockProduit.objects.all()
     context={'sp':sp, 'v':valeurTotal}
     return render(request, 'stock.html', context)
+
+## Gestion Vente
+
+def liste_ventes(request):
+    ventes=Vente.objects.all()
+    montant_total_global = sum(vente.montant_total_vente for vente in ventes)
+    context={'ventes':ventes, 'montant_total_global': montant_total_global}
+    return render(request,'vente/ventes.html', context)
+
+def ajouter_vente(request):
+    if request.method == 'POST':
+        form = VenteForm(request.POST)
+        if form.is_valid():
+            produits = request.POST.getlist('produits')
+            if not produits:
+                form.add_error(None, "Sélectionnez au moin un produit")
+                return render(request, 'vente/ajouterV.html', {'form': form, 'stock': StockProduit.objects.all()})
             
+            vente = form.save(commit=False)
+            vente.save()
+            for produit_id in produits:
+                quantite = float(request.POST.get('quantite_' + produit_id))
+                prixVente = float(request.POST.get('prix_' + produit_id))
+                montant = prixVente * quantite ## to add later ProduitVente
+                stock = StockProduit.objects.get(produit=Produit.objects.get(pk=produit_id))
+                stock.qteDispo -= quantite
+                stock.save()    
+                
+            montantT = float(request.POST.get('montantT'))
+            somrecue = float(request.POST.get('sommerecue'))
+            cl = vente.client
+            pccl = PaiementCreditClient(
+                date_paiement_fournisseur=vente.date_vente, montant_paiement_credit_client=somrecue, client=cl
+                )
+            pccl.save()
+            # le cas du paymenet partiel
+            if somrecue < montantT:
+                cl.credit_client += montantT - somrecue
+                cl.save()    
+            vente.montant_total_vente = montantT
+            vente.montant_recue = somrecue
+            vente.save()
+            return redirect('listeA')
+    else:
+        form = VenteForm()
+    return render(request, 'vente/ajouterV.html', {'form': form, 'stock': StockProduit.objects.all()}) 
+    
+
+def supprimer_vente(request):
+    return render(request,'vente/ventes.html')
+
             
