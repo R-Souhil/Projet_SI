@@ -6,6 +6,13 @@ class Magasin(models.Model):
     code_magasin = models.AutoField(primary_key=True)
     nom_magasin = models.CharField(max_length=50)
     adresse_magasin = models.TextField()
+    valeur_stock = models.FloatField(max_length=30,default=0)
+    
+    def create(self):
+        try:
+            s=Magasin.objects.get(code_magasin='1')
+        except:
+            s=Magasin.objects.create(code_magasin='1',nom_magasin='Magasin Principal')
 
     def __str__(self):
         return self.nom_magasin
@@ -88,6 +95,34 @@ class PaiementFournisseur(models.Model):
 
     def __str__(self):
         return self.numero_paiement_fournisseur
+
+
+class StockProduit(models.Model):
+    primary_key = models.CharField(max_length=254, primary_key=True)
+    stock = models.ForeignKey(Magasin, on_delete=models.CASCADE)
+    produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    qteDispo = models.PositiveIntegerField(default=0)
+    
+    def update_stock(self):
+        qte=0
+        pa=ProduitAchat.objects.filter(produit=self.produit)
+        for item in pa:
+            try:
+                prdstock=StockProduit.objects.get(produit=item.produit)
+            except:
+                prdstock=StockProduit.objects.create(produit=item.produit,stock=Magasin.objects.get(code_magasin=1))
+            qte += item.quantite
+        for item in pa:
+            qte += item.quantite
+        self.qteDispo = qte
+
+    def save(self, *args, **kwargs):
+        self.primary_key = str(self.stock) + str(self.produit)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.stock.__str__() + " " + self.produit.__str__()
+    
     
 class Transfert(models.Model):
     numero_transfert = models.AutoField(primary_key=True)

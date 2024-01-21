@@ -2,6 +2,7 @@ from django.urls import path
 from magasin import views
 
 urlpatterns = [
+    path('stock/', views.magasin, name='stock'), 
     ## url clients
     path('clients/',views.liste_clients, name='listeCl'),
     path('clients/ajouter',views.ajouter_client, name='ajouterCl'),

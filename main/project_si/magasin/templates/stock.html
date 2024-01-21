@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <script src="{% static 'javascript/script.js' %}"></script>
+    <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
+
+    <title>Stock</title>
+  </head>
+  <body>
+    {% include 'header.html' %}
+    <h4 class="display-5 d-inline">Liste des Produits en Stock</h4>
+    <input
+    class="hid search"
+      type="text"
+      id="myInput"
+      onkeyup="SearchBar()"
+      placeholder="Rechercher un Produit ..."
+    />
+    
+    <table class="table trecherche">
+      <thead>
+        <th>N°</th>
+        <th>Nom</th>
+        <th>Prix d'Achat</th>
+        <th>Qte en Stock</th>
+      </thead>
+      {% for sp in sp %}
+      <tbody>
+        <tr data-aos="fade-right" data-anchor-placement="center-center">
+            <td>{{sp.produit.code_produit}} </td>
+            <td> 
+                {{sp.produit.designation_produit}}
+            </td>
+            <td> 
+              {{sp.produit.prix_achat_unitaire_HT}}
+          </td>
+            <td>
+                {{sp.qteDispo}}
+            </td>
+          </tr>
+        {% endfor%}  
+      </tbody> 
+    </table>
+    <div style="display: flex;flex-direction: column;align-items: flex-end;">
+    <button style="background-color: purple;float: right;margin-right: 25px; width: 18%;margin-bottom: 20px;" id="print-button" class="btn btn-primary" >Imprimer</button>
+    </div>
+    <h3 class="display-5 d-inline">Valeur Totale du Stock : <strong>{{v}}</strong> DA </h3>
+    <canvas id="myChartS"></canvas>
+  </body>
+</html>

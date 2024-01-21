@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from .models import Magasin, Centre, Client, Produit, ProduitAchat, Employe, Vente, PV, PaiementCreditClient, Fournisseur, Achat, Transfert, PaiementFournisseur, AnalyseDesVentes, AnalyseDesAchats
+from .models import Magasin, Centre, Client, Produit, ProduitAchat, Employe, Vente, PV, StockProduit, PaiementCreditClient, Fournisseur, Achat, Transfert, PaiementFournisseur, AnalyseDesVentes, AnalyseDesAchats
 from .forms import ProduitForm, ClientForm, EmployeForm, CentreForm, FournisseurForm, AchatForm, PaiementFournisseurForm
 
 
@@ -220,7 +220,8 @@ def modifier_fournisseur(request, pid):
 
 def liste_achats(request):
     achats=Achat.objects.all()
-    context={'achats':achats}
+    montant_total_global = sum(achat.montant_total_HT for achat in achats)
+    context={'achats':achats, 'montant_total_global': montant_total_global}
     return render(request,'achat/achats.html', context)
 
 def ajouter_achat(request):
@@ -239,6 +240,13 @@ def ajouter_achat(request):
                 montant = Produit.objects.get(pk=produit_id).prix_achat_unitaire_HT * quantite
                 prdacht = ProduitAchat(produit=Produit.objects.get(pk=produit_id), achat=achat, quantite=quantite, montant_prd=montant)
                 prdacht.save()
+                try:
+                    stock = StockProduit.objects.get(produit=Produit.objects.get(pk=produit_id))
+                except StockProduit.DoesNotExist:
+                    stock = StockProduit.objects.create(produit=Produit.objects.get(pk=produit_id), stock=Magasin.objects.get(code_magasin=1))
+                stock.qteDispo += quantite
+                stock.save()    
+                
             montantT = float(request.POST.get('montantT'))
             sompay = float(request.POST.get('sommepaye'))
             frn = achat.fournisseur
@@ -263,13 +271,23 @@ def ajouter_achat(request):
 def supprimer_achat(request, pid):
     achat = get_object_or_404(Achat, numero_achat=pid)
     if request.method=='POST':
-        # annulez le solde ajouté precedemment et supprimer le paiement
-        pays = PaiementFournisseur.objects.filter(fournisseur=achat.fournisseur, date_paiement_fournisseur=achat.date_achat, montant_paiement_fournisseur=achat.montant_paye)
+        # annulez le solde ajouté precedemment et supprimer le paiement et diminuer le stock
+        pays = PaiementFournisseur.objects.get(fournisseur=achat.fournisseur, date_paiement_fournisseur=achat.date_achat, montant_paiement_fournisseur=achat.montant_paye)
         if achat.montant_total_HT > achat.montant_paye:
             frn = achat.fournisseur
             frn.solde_fournisseur -= achat.montant_total_HT - achat.montant_paye
             frn.save()
             pays.delete()
+            
+        prds = ProduitAchat.objects.filter(achat=achat)
+        for prd in prds:
+            prdstock = StockProduit.objects.get(produit=prd.produit)
+            prdstock.qteDispo -= prd.quantite
+            if prdstock.qteDispo == 0:
+                prdstock.delete()
+            else:
+                prdstock.save()
+            prd.delete()
         achat.delete()
         return redirect('listeA')  
     context={'item':achat, 'produits': ProduitAchat.objects.filter(achat=achat)}
@@ -303,5 +321,16 @@ def paiement_fournisseur(request,pid):
     return render(request, 'achat/paiementF.html', {'form': form, 'f': frn})
 
 
+def magasin(request):
+    try:
+        s=Magasin.objects.get(code_magasin='1')
+    except:
+        s=Magasin.objects.create(code_magasin='1',nom_magasin='Magasin Principal')
+    valeurTotal = sum(stock.produit.prix_achat_unitaire_HT * stock.qteDispo for stock in StockProduit.objects.all())
+    s.valeur_stock = valeurTotal
+    s.save()
+    sp=StockProduit.objects.all()
+    context={'sp':sp, 'v':valeurTotal}
+    return render(request, 'stock.html', context)
             
             
