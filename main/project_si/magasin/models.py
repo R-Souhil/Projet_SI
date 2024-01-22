@@ -5,7 +5,7 @@ from django.utils import timezone
 class Magasin(models.Model):
     code_magasin = models.AutoField(primary_key=True)
     nom_magasin = models.CharField(max_length=50)
-    adresse_magasin = models.TextField()
+    adresse_magasin = models.CharField(max_length=100)
     valeur_stock = models.FloatField(max_length=30,default=0)
     
     def create(self):
@@ -22,7 +22,7 @@ class Centre(models.Model):
     designation_centre = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.designation
+        return self.designation_centre
 
 class Produit(models.Model):
     code_produit = models.AutoField(primary_key=True)
@@ -36,7 +36,7 @@ class Employe(models.Model):
     code_employe = models.AutoField(primary_key=True)
     nom_employe = models.CharField(max_length=20)
     prenom_employe = models.CharField(max_length=30)
-    adresse_employe = models.TextField()
+    adresse_employe = models.CharField(max_length=100)
     telephone_employe = models.CharField(max_length=20)
     salaire_jour = models.FloatField(max_length=30)
     centre = models.ForeignKey(Centre, on_delete=models.CASCADE)
@@ -48,7 +48,7 @@ class Client(models.Model):
     code_client = models.AutoField(primary_key=True)
     nom_client = models.CharField(max_length=20)
     prenom_client = models.CharField(max_length=50)
-    adresse_client = models.TextField()
+    adresse_client = models.CharField(max_length=100)
     telephone_client = models.CharField(max_length=20)
     credit_client = models.FloatField(max_length=30)
 

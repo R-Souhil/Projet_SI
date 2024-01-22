@@ -35,7 +35,7 @@
       <thead>
         <th>Code_E</th>
         <th>Nom</th>
-        <th>Prenom</th>
+        <th>Salaire</th>
         <th>Centre</th>
         <th class="hid">Actions</th>
         <th class="hid"></th>
@@ -44,8 +44,9 @@
       <tbody>
         <tr data-aos="fade-right" data-aos-anchor-placement="bottom-bottom">
           <td>{{employe.code_employe}}</td>
-          <td>{{employe.designation_employe}}</td>
-          <td>{{employe.prix_achat_unitaire_HT|floatformat:2}}</td>
+          <td>{{employe.nom_employe}} {{employe.prenom_employe}}</td>
+          <td>{{employe.salaire_jour|floatformat:2}}</td>
+          <td>{{employe.centre.code_centre}}</td>
           <td class="hid">
             <a class="btn btn-secondary" href="{% url 'modifierE' employe.code_employe %}">
               Modifier
