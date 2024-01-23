@@ -85,7 +85,7 @@ class ProduitAchat(models.Model):
     montant_prd = models.FloatField()
 
     def __str__(self):
-        return f"{self.produit.designation_produit} - {self.quantite} - {self.montant_total_HT}"
+        return f"{self.produit.designation_produit} - {self.quantite} - {self.montant_prd}"
     
 class PaiementFournisseur(models.Model):
     numero_paiement_fournisseur = models.AutoField(primary_key=True)
@@ -122,40 +122,27 @@ class Transfert(models.Model):
     def __str__(self):
         return self.numero_transfert
     
-class AnalyseDesVentes(models.Model):
-    annee = models.IntegerField()
-    mois = models.IntegerField()
-    taux_evolution_ventes = models.FloatField(max_length=30)
-    taux_evolution_benefice = models.FloatField(max_length=30)
-    top_clients = models.TextField()
-    best_sellers = models.TextField()
-
-    def str(self):
-        return self.annee+"-"+self.mois
-    
-
-class AnalyseDesAchats(models.Model):
-    annee = models.IntegerField
-    mois = models.IntegerField
-    taux_evolution_achats = models.FloatField(max_length=30)
-    top_fournisseurs = models.TextField()
-
-    def str(self):
-        return self.annee+"-"+self.mois
-    
-
   
 class Vente(models.Model):
     numero_vente = models.AutoField(primary_key=True)
     date_vente = models.DateField(default=timezone.now)
-    quantite_vendue = models.IntegerField()
-    montant_total_vente = models.FloatField(max_length=30)
-    montant_recue = models.FloatField(max_length=30)
+    montant_total_vente = models.FloatField(max_length=30,default=0)
+    montant_recue = models.FloatField(max_length=30,default=0)
+    benefice_vente = models.FloatField(default=0)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.numero_vente
+        return f"self.numero_vente"
+    
+class ProduitVente(models.Model):
+    produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    vente = models.ForeignKey(Vente, on_delete=models.CASCADE)
+    quantite = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    montant_vente_prd = models.FloatField()
+    prix_vente_unite = models.FloatField()
+
+    def __str__(self):
+        return f"{self.produit.designation_produit} - {self.quantite} - {self.montant_vente_prd}"
     
 class PV(models.Model):
     numero_pv = models.AutoField(primary_key=True)
@@ -177,3 +164,25 @@ class PaiementCreditClient(models.Model):
 
     def __str__(self):
         return self.numero_paiement_credit_client
+
+    
+class AnalyseDesVentes(models.Model):
+    annee = models.IntegerField()
+    mois = models.IntegerField()
+    taux_evolution_ventes = models.FloatField(max_length=30)
+    taux_evolution_benefice = models.FloatField(max_length=30)
+    top_clients = models.TextField()
+    best_sellers = models.TextField()
+
+    def str(self):
+        return self.annee+"-"+self.mois
+    
+
+class AnalyseDesAchats(models.Model):
+    annee = models.IntegerField
+    mois = models.IntegerField
+    taux_evolution_achats = models.FloatField(max_length=30)
+    top_fournisseurs = models.TextField()
+
+    def str(self):
+        return self.annee+"-"+self.mois

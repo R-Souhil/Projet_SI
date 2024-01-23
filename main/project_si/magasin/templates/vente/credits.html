@@ -8,9 +8,10 @@
     
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     
+    <script src="{% static 'javascript/script.js' %}"></script>
     <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
 
-    <title>Clients</title>
+    <title>Reglement</title>
   </head>
   <body>
     {% include 'header.html' %}
@@ -33,39 +34,40 @@
     />
     <table class="table trecherche">
       <thead>
-        <th>Code Client</th>
         <th>Nom</th>
-        <th>Prenom</th>
-        <th>Crédit</th>
+        <th>Paiements</th>
+        <th>Credits</th>
+        <th>Etat</th>
         <th class="hid">Actions</th>
         <th class="hid"></th>
       </thead>
-      {% for client in clients %}
+      {% for c in clients %}
       <tbody>
         <tr data-aos="fade-right" data-aos-anchor-placement="bottom-bottom">
-          <td>{{client.code_client}}</td>
-          <td>{{client.nom_client}}</td>
-          <td>{{client.prenom_client}}</td>
-          <td>{{client.credit_client|floatformat:2}}</td>
-          <td class="hid">
-            <a class="btn btn-secondary" href="{% url 'modifierCl' client.code_client %}">
-              Modifier
-            </a>
-            <a class="btn btn-danger" href="{% url 'supprimerCl' client.code_client %}">
-              Supprimer
-            </a>
+          <td>{{c.nom_client}} {{c.prenom_client}}</td>
+          <td>{% for p in pays %}
+            {% if p.client.code_client == c.code_client %}
+            N°{{ p.numero_paiement_credit_client }} : {{ p.montant_paiement_credit_client }}DA <br>
+            {% endif %}
+            {% endfor%}  
           </td>
-          
+          <td>{{c.credit_client|floatformat:2}} DA</td>
+          {% if c.credit_client > 0.001 %}
+            <td class="badge bg-danger">Non Payé</td>
+            <td class="hid">
+              <a class="btn btn-secondary" href="{% url 'paiementCC' c.code_client %}">
+                Payement
+              </a>
+            </td>
+          {% else %}
+            <td class="badge bg-success">Payé</td>
+          {% endif %}
         </tr>
         {% endfor%}  
-       
-      </tbody> 
-
+      </tbody>
     </table>
     <div style="display: flex;flex-direction: column;align-items: flex-end;">
-    <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterCl' %}">Ajouter un nouveau Client</a> 
-    <button onclick="printPage()" style="background-color: purple;float: right;margin-right: 25px; width: 18%;margin-bottom: 20px;" id="print-button" class="btn btn-primary" >Imprimer</button>
+    <button style="background-color: purple;float: right;margin-right: 25px; width: 18%;margin-bottom: 20px;" id="print-button" class="btn btn-primary" >Imprimer</button>
     </div>
   </body>
-  <script src="{% static 'javascript/script.js' %}"></script>
 </html>

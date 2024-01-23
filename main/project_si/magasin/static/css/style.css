@@ -2,8 +2,7 @@
 @import "jquery.css";
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&family=Raleway:wght@400;500&display=swap');
 @media print {
-    /* styles to hide elements on the page when printing */
-    /* for example, you can hide the button itself */
+    /* to hide elements on the page when printing */
     button,nav,nav *,.btn,.hid,.hid *{
         display: none !important;
     }
@@ -201,11 +200,11 @@ td{
 
 #myInput {
     display: block;
-    width: 40%; /* Full-width */
-    font-size: 16px; /* Increase font-size */
-    padding: 12px 20px 12px 40px; /* Add some padding */
-    border: 1px solid #ddd; /* Add a grey border */
-    margin-bottom: 12px; /* Add some space below the input */
+    width: 40%;
+    font-size: 16px; 
+    padding: 12px 20px 12px 40px; 
+    border: 1px solid #ddd; 
+    margin-bottom: 12px; 
     border-radius: 20px;
     position:relative;
     top:50px;
@@ -226,12 +225,13 @@ td{
 
 #ADDFr, #ADDProd, #ADDCat, #ADDCl, #Annuler{
     color: #2a292e;
-    background:#e9bcc6;
+    background: #e9bcc6;
     border-radius: 10px;
-    margin-left:10px;
-    padding: 5px;
+    margin-left: 10px;
+    padding: 10px;
     z-index: -1;
     transition: 0.5s;
+    font-size: 16px;
 }
 
 #Annuler{
@@ -239,7 +239,7 @@ td{
     font-size: 20px;
 }
 
-#ADDFr:hover, #ADDProd:hover, #Annuler:hover, #ADDCat:hover{
+#ADDFr:hover, #ADDProd:hover, #Annuler:hover, #ADDCl:hover{
     background-color: #eb8876;
 }
 
@@ -325,57 +325,4 @@ input{
 .btns{
     position: relative;
     top: 50px;
-}
-
-#printIcon{
-    width: 15%;
-    height: 15%;
-    position: relative;
-    left: 20px;
-}
-
-#deleteIcon, #trashIcon{
-    width: 30px;
-    height: 30px;
-}
-
-#updateUsername, #updatePwd{
-    z-index: 0;
-    padding-bottom: 50px;
-    text-align: center;
-}
-
-
-
-#backgroundAcc{
-    background-color: #cecece28;
-    border-radius: 20px;
-    height: 370px;
-    margin:0 350px 0 350px;
-    z-index: -1;
-    position: relative;
-    top:60px;
-}
-
-.Account{
-    display:flex;
-    align-items: center;
-    justify-content: space-evenly;
-}
-
-#verticalLign{
-    border-left: 6px solid #eb88767a;
-    height: 365px;
-    margin-left: -3px;
-    z-index: -1;
-}
-  /* ----------------------------------*/
-#myChart,#myChart2{
-    width: 100%!important;
-    height: 400px!important; 
-}
-
-#myChartS{
-    width: 100%!important;
-    height: 100%!important; 
 }

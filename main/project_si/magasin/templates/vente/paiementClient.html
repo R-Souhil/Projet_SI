@@ -10,7 +10,7 @@
     <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'javascript/script.js' %}"></script>
 
-    <title>Reglement</title>
+    <title>Credits</title>
   </head>
   <body>
     {% include 'header.html' %}
@@ -19,20 +19,20 @@
     <form method="POST">
       {% csrf_token %}
       <p>
-        Vous êtes sur le point de payer <strong> {{f.nom_fournisseur}} {{f.prenom_fournisseur}}</strong> (Montant restant à payer :<strong> {{f.solde_fournisseur|floatformat:2}} DA</strong>) <br />
+        <strong> {{c.nom_client}} {{c.prenom_client}}</strong> va payer ses Crédits (Montant restant à payer :<strong> {{c.credit_client|floatformat:2}} DA</strong>) <br />
       </p>
       {{form.as_p}}
       Montant : <input
         name="montant_paye"
         type="number"
-        value="{{f.solde_fournisseur|floatformat:2}}"
-        max="{{f.solde_fournisseur}}"
+        value="{{c.credit_client|floatformat:2}}"
+        max="{{c.credit_client}}"
         min="1"
         step="0.01"
       />
 
         <br/><br/>
-      <a href="{% url 'listeReg' %}" class="btn btn-danger">Annuler</a>
+      <a href="{% url 'listeCrds' %}" class="btn btn-danger">Annuler</a>
       <input  type="submit" value="Payer" />
     </form>
   </body>

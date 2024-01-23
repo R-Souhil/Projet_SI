@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from .models import Magasin, Centre, Client, Produit, ProduitAchat, Employe, Vente, PV, StockProduit, PaiementCreditClient, Fournisseur, Achat, Transfert, PaiementFournisseur, AnalyseDesVentes, AnalyseDesAchats
-from .forms import ProduitForm, ClientForm, EmployeForm, CentreForm, VenteForm, FournisseurForm, AchatForm, PaiementFournisseurForm
+from .models import Magasin, Centre, Client, Produit, ProduitAchat, Employe, Vente, ProduitVente, PV, StockProduit, PaiementCreditClient, Fournisseur, Achat, Transfert, PaiementFournisseur, AnalyseDesVentes, AnalyseDesAchats
+from .forms import ProduitForm, ClientForm, EmployeForm, CentreForm, VenteForm, PaiementCreditClientForm, FournisseurForm, AchatForm, PaiementFournisseurForm
 
 
 
@@ -338,10 +338,12 @@ def magasin(request):
 def liste_ventes(request):
     ventes=Vente.objects.all()
     montant_total_global = sum(vente.montant_total_vente for vente in ventes)
-    context={'ventes':ventes, 'montant_total_global': montant_total_global}
+    benefice_total = sum(vente.benefice_vente for vente in ventes)
+    context={'ventes':ventes, 'montant_total_global': montant_total_global, 'benefice': benefice_total}
     return render(request,'vente/ventes.html', context)
 
 def ajouter_vente(request):
+    montantTachat = 0
     if request.method == 'POST':
         form = VenteForm(request.POST)
         if form.is_valid():
@@ -355,32 +357,105 @@ def ajouter_vente(request):
             for produit_id in produits:
                 quantite = float(request.POST.get('quantite_' + produit_id))
                 prixVente = float(request.POST.get('prix_' + produit_id))
-                montant = prixVente * quantite ## to add later ProduitVente
+                montant = prixVente * quantite
+                prdvente = ProduitVente(
+                    produit=Produit.objects.get(pk=produit_id),
+                    vente=vente,
+                    quantite=quantite,
+                    montant_vente_prd=montant,
+                    prix_vente_unite=prixVente
+                    )
+                prdvente.save()
                 stock = StockProduit.objects.get(produit=Produit.objects.get(pk=produit_id))
                 stock.qteDispo -= quantite
-                stock.save()    
+                if stock.qteDispo == 0:
+                    stock.delete()
+                else:
+                    stock.save()
+                montantTachat += Produit.objects.get(pk=produit_id).prix_achat_unitaire_HT * quantite
                 
             montantT = float(request.POST.get('montantT'))
             somrecue = float(request.POST.get('sommerecue'))
             cl = vente.client
             pccl = PaiementCreditClient(
-                date_paiement_fournisseur=vente.date_vente, montant_paiement_credit_client=somrecue, client=cl
+                date_paiement_credit_client=vente.date_vente, montant_paiement_credit_client=somrecue, client=cl
                 )
             pccl.save()
-            # le cas du paymenet partiel
+            # le cas du paiemenet partiel on ajoute le montant restant au credit du client
             if somrecue < montantT:
                 cl.credit_client += montantT - somrecue
                 cl.save()    
+            
+            vente.benefice_vente = montantT - montantTachat
             vente.montant_total_vente = montantT
             vente.montant_recue = somrecue
             vente.save()
-            return redirect('listeA')
+            return redirect('listeV')
     else:
         form = VenteForm()
     return render(request, 'vente/ajouterV.html', {'form': form, 'stock': StockProduit.objects.all()}) 
     
 
-def supprimer_vente(request):
-    return render(request,'vente/ventes.html')
-
+def supprimer_vente(request, pid):
+    vente = get_object_or_404(Vente, numero_vente=pid)
+    if request.method=='POST':
+        # annulez le crédit ajouté precedemment et supprimer le paiement et remplir le stock
+        pays = PaiementCreditClient.objects.get(client=vente.client, date_paiement_credit_client=vente.date_vente, montant_paiement_credit_client=vente.montant_recue)
+        if vente.montant_total_vente > vente.montant_recue:
+            client = vente.client
+            client.credit_client -= vente.montant_total_vente - vente.montant_recue
+            client.save()
+            pays.delete()
             
+        vprds = ProduitVente.objects.filter(vente=vente)
+        for vprd in vprds:
+            try:
+                prdstock = StockProduit.objects.get(produit=vprd.produit)
+                prdstock.qteDispo += vprd.quantite
+                prdstock.save()
+            except StockProduit.DoesNotExist:
+                StockProduit.objects.create(
+                    produit=vprd.produit,
+                    stock=Magasin.objects.get(code_magasin=1),
+                    qteDispo=vprd.quantite
+                )
+                prdstock.save()
+            
+            vprd.delete()
+        vente.delete()
+        return redirect('listeV')  
+    context={'item':vente, 'produits': ProduitVente.objects.filter(vente=vente)}
+    return render(request,'vente/supprimerV.html',context)
+
+def liste_credits(request):
+    cls = Client.objects.all()
+    pays = PaiementCreditClient.objects.all()
+    return render(request, 'vente/credits.html', {'clients': cls, 'pays': pays})
+
+def paiement_client(request,pid):
+    cl = Client.objects.get(pk=pid)
+    if request.method == 'POST':
+        form = PaiementCreditClientForm(request.POST)
+        if form.is_valid():
+            date = form.cleaned_data['date_paiement_credit_client']
+            montant = float(request.POST.get('montant_paye'))
+            
+            pcl = PaiementCreditClient(
+                date_paiement_credit_client=date,
+                montant_paiement_credit_client=montant,
+                client=cl
+            )
+            pcl.save()
+            
+            cl.credit_client -= montant
+            cl.save()
+            return redirect('listeCrds')
+    else:
+        form = PaiementCreditClientForm()
+    return render(request, 'vente/paiementClient.html', {'form': form, 'c': cl})
+
+
+
+
+
+

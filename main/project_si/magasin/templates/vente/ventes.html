@@ -26,7 +26,8 @@
       <thead>
         <th>N°</th>
         <th>Client</th>
-        <th>Montant</th>
+        <th>Montant Brut</th>
+        <th>Bénéfice</th>
         <th>Date Vente</th>
         <th class="hid">Actions</th>
       </thead>
@@ -36,6 +37,7 @@
           <td>{{v.numero_vente}}</td>
           <td>{{v.client.nom_client}} {{v.client.prenom_client}}</td>
           <td>{{v.montant_total_vente|floatformat:2}} DA</td>
+          <td>{{v.benefice_vente|floatformat:2}} DA</td>
           <td>{{v.date_vente}}</td>
           <td class="hid">
             <a class="btn btn-danger" href="{% url 'supprimerV' v.numero_vente %}">Delete</a>
@@ -44,12 +46,13 @@
         {% endfor%} 
         <tr> 
             <td colspan="1"></td>
-            <td>Total des Ventes :</td>
+            <td>Total brut :</td>
             <td>{{ montant_total_global|floatformat:2 }} DA</td>
             <td class="hid"></td>
         </tr>
       </tbody> 
     </table>
+    <h3 class="display-5 d-inline">Bénéfice des Ventes : <strong>{{benefice}}</strong> DA </h3>
     <div style="display: flex;flex-direction: column;align-items: flex-end;">
     <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterV' %}">Ajouter une nouvelle Vente</a>
     <button style="background-color: purple;float: right;margin-right: 25px; width: 18%;margin-bottom: 20px;" id="print-button" class="btn btn-primary" >Imprimer</button>

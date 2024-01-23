@@ -22,78 +22,40 @@ function SearchBar() {
 }
 
 
-const printbtn = document.getElementById('print-button');
-printbtn.addEventListener('click', function () {
+function printPage() {
     window.print();
 }
-)
 
 
 function checkboxChanged(checkbox) {
-    var row = checkbox.parentNode.parentNode;
+    var row = checkbox.closest('tr');
     var inputs = row.querySelectorAll("input");
+
     if (checkbox.checked) {
         row.style.backgroundColor = "#d04462";
         for (var i = 1; i < inputs.length; i++) {
             inputs[i].disabled = false;
         }
-
     } else {
         row.style.backgroundColor = "#2a292e";
         for (var i = 1; i < inputs.length; i++) {
             inputs[i].disabled = true;
         }
     }
-    var quantityInput = document.getElementsByName("quantite_" + checkbox.value)[0];
-    quantityInput.disabled = !checkbox.checked;
-
     updateTotal();
 }
-
 
 function updateTotal() {
-    var checkboxes = document.getElementsByName("produits");
-    var totalAmount = 0;
-    var montantPaye = document.getElementById("paiementfrn");
-    var montantRecue = document.getElementById("paiementcl");
+    var total = 0;
+    var checkboxes = document.querySelectorAll('input[name="produits"]:checked');
+    
+    checkboxes.forEach(function (checkbox) {
+      var row = checkbox.closest('tr');
+      var quantityInput = row.querySelector('input[name^="quantite"]');
+      var priceInput = row.querySelector('#priceCalc');
 
-    for (var i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].checked) {
-            var quantityInput = document.getElementsByName("quantite_" + checkboxes[i].value)[0];
-            var price = parseFloat(checkboxes[i].parentNode.previousElementSibling.textContent);
-            var partialAmount = price * parseFloat(quantityInput.value);
-            totalAmount += partialAmount;
-        }
-    }
+      total += parseFloat(priceInput.value) * parseInt(quantityInput.value);
+    });
 
-    var totalQuantityInput = document.getElementById("montant");
-    if (totalQuantityInput) {
-        totalQuantityInput.value = totalAmount.toFixed(2);
-    }
-    montantPaye.max=totalAmount;
-    montantRecue.max=totalAmount;
-}
-
-  function checkboxChanged(checkbox) {
-    var quantityInput = document.getElementsByName("quantite_" + checkbox.value)[0];
-    quantityInput.disabled = !checkbox.checked;
-
-    updateTotal();
-}
-
-
-function Changed(input) {
-    let row = input.parentNode.parentNode;
-    let prix_ht = row.children[2].children[0].value;
-    let qte = row.children[4].children[0].value;
-    console.log(row.children[5].children[0])
-    row.children[5].innerText = prix_ht * qte + " DA"
-}
-
-function Changed2(input) {
-    let row = input.parentNode.parentNode;
-    let prix = row.children[2].children[0].value;
-    let qte = row.children[3].children[0].value;
-    console.log(row.children[4].children[0])
-    row.children[4].innerText = prix * qte + " DA"
+    document.getElementById('montant').value = total;
 }

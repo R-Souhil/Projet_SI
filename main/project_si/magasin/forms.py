@@ -1,6 +1,6 @@
 from django.db.models import fields
 from django import forms
-from .models import Centre, Produit, Employe, Client, Fournisseur, Achat, Vente, ProduitAchat, PaiementFournisseur
+from .models import Centre, Produit, Employe, Client, Fournisseur, Achat, Vente, ProduitAchat, PaiementFournisseur, PaiementCreditClient
 
 
 class CentreForm(forms.ModelForm):
@@ -37,6 +37,11 @@ class FournisseurForm(forms.ModelForm):
         model = Fournisseur
         fields=["nom_fournisseur","prenom_fournisseur","adresse_fournisseur","telephone_fournisseur"]
         
+class PaiementCreditClientForm(forms.ModelForm):
+    class Meta:
+        model = PaiementCreditClient
+        fields = ['date_paiement_credit_client']
+        
 class AchatForm(forms.ModelForm):
     class Meta:
         model = Achat
@@ -51,6 +56,7 @@ class VenteForm(forms.ModelForm):
     class Meta:
         model = Vente
         fields = ['date_vente', 'client']
+
 
 
         

@@ -1,6 +1,6 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+  {% load static %}
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -20,7 +20,7 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <div style="display: flex;flex-direction: column;">
+        <div style="display: flex;flex-direction: column;justify-content: space-between; gap: 2em;">
             <span>
             <a id="ADDFr" href="#" onclick="window.open('{% url "ajouterF" %}', 'newwindow'); return false;">Ajouter un Fournisseur</a>
             </span>
@@ -39,8 +39,8 @@
           <thead>
             <tr>
               <th>Produit</th>
-              <th>Prix</th>
               <th>Selectionner</th>
+              <th>Prix d'achat</th>
               <th>Quantité</th>
             </tr>
           </thead>
@@ -48,9 +48,10 @@
             {% for produit in produits %}
               <tr>
                 <td>{{ produit.designation_produit }}</td>
-                <td>{{ produit.prix_achat_unitaire_HT|floatformat:2 }}</td>
                 <td><input type="checkbox" name="produits" onchange="checkboxChanged(this)" value="{{ produit.code_produit }}"></td>
-
+                
+                <td><input type="number" id="priceCalc" value="{{ produit.prix_achat_unitaire_HT|floatformat:2 }}" readonly/></td>
+                
                 <td><input type="number" name="quantite_{{ produit.code_produit }}" value="1" disabled onchange="updateTotal()"></td>
               </tr>
             {% endfor %}

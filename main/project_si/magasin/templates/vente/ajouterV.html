@@ -20,9 +20,9 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <div style="display: flex;flex-direction: column;">
+        <div style="display: flex;flex-direction: column;justify-content: space-between; gap: 2em;">
             <span>
-            <a id="ADDFr" href="#" onclick="window.open('{% url "ajouterCl" %}', 'newwindow'); return false;">Ajouter un Fournisseur</a>
+            <a id="ADDCl" href="#" onclick="window.open('{% url "ajouterCl" %}', 'newwindow'); return false;">Ajouter un Client</a>
             </span>
             <span>
             <a id="ADDProd" href="#" onclick="window.open('{% url "ajouterP" %}', 'newwindow'); return false;">Ajouter un Produit</a>
@@ -39,8 +39,9 @@
           <thead>
             <tr>
               <th>Produit</th>
-              <th>Prix</th>
+              <th>Prix d'achat</th>
               <th>Selectionner</th>
+              <th>Prix de vente</th>
               <th>Quantité</th>
             </tr>
           </thead>
@@ -49,22 +50,22 @@
               <tr>
                 <td>{{ s.produit.designation_produit }}</td>
                 <td>{{ s.produit.prix_achat_unitaire_HT|floatformat:2 }}</td>
-                <td><input type="number" name="prix_{{ s.produit.code_produit }}" value="1" min="{{ s.produit.prix_achat_unitaire_HT|floatformat:2 }}" disabled onchange="updateTotal()"></td>
-
                 <td><input type="checkbox" name="produits" onchange="checkboxChanged(this)" value="{{ s.produit.code_produit }}"></td>
-
-                <td><input type="number" name="quantite_{{ s.produit.code_produit }}" value="1" disabled onchange="updateTotal()"></td>
+                
+                <td><input type="number" id="priceCalc" name="prix_{{ s.produit.code_produit }}" step="0.01" min="{{ s.produit.prix_achat_unitaire_HT|floatformat:2 }}" disabled onchange="updateTotal()"></td>
+                
+                <td><input type="number" name="quantite_{{ s.produit.code_produit }}" value="1" max="{{s.qteDispo}}" disabled onchange="updateTotal()"></td>
               </tr>
             {% endfor %}
               <tr>
-                <td><strong>Vous Recevez :</strong></td>
-                <td><input type="number" name="sommerecue" id="paiementcl" min="0" step="0.01"></td>
-                <td><strong>Total</strong></td>
-                <td><input type="number" name="montantT" id="montant" readonly></td>  
+                <td colspan="2"></td>
+                <td><strong>Montant Total :</strong></td>
+                <td><input type="number" name="montantT" id="montant" readonly></td>
+                <td><input type="number" name="sommerecue" id="paiementcl" min="0" step="0.01" placeholder="Somme Payé ..."></td>
               </tr>
           </tbody>
         </table>
-        <input type="submit" value="Payer">
+        <input type="submit" value="Effectuer Paiement">
       </form>
 </body>
 </html>
