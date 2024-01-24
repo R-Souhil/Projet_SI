@@ -1,3 +1,27 @@
+function updateDropdown(text) {
+
+    document.getElementById('selectednav').textContent = text;
+
+    sessionStorage.setItem('selectedPage', text);
+
+    if (text === 'Magasin Principal') {
+        window.location.href = '/stock';
+    } else if (text === 'Centre1') {
+        window.location.href = '/stock/centre/1';
+    } else if (text === 'Centre2') {
+        window.location.href = '/stock/centre/2';
+    } else if (text === 'Centre3') {
+        window.location.href = '/stock/centre/3';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    var storedPage = sessionStorage.getItem('selectedPage');
+    if (storedPage) {
+      document.getElementById('selectednav').textContent = storedPage;
+    }
+  });
+
 function SearchBar() {
     
     var input, filter, table, tr, td, i, txtValue;

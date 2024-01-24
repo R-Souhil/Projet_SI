@@ -10,11 +10,11 @@
     <script src="{% static 'javascript/script.js' %}"></script>
     <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
 
-    <title>Stock</title>
+    <title>Stock Centre {{c.code_centre}}</title>
   </head>
   <body>
     {% include 'header.html' %}
-    <h4 class="display-5 d-inline">Produits en Stock du Magasin</h4>
+    <h4 class="display-5 d-inline">Produits en Stock du Centre {{c.code_centre}} </h4>
     <input
     class="hid search"
       type="text"
@@ -30,18 +30,18 @@
         <th>Prix d'Achat</th>
         <th>Qte en Stock</th>
       </thead>
-      {% for sp in sp %}
+      {% for sc in sc %}
       <tbody>
         <tr data-aos="fade-right" data-anchor-placement="center-center">
-            <td>{{sp.produit.code_produit}} </td>
+            <td>{{sc.produit.code_produit}} </td>
             <td> 
-                {{sp.produit.designation_produit}}
+                {{sc.produit.designation_produit}}
             </td>
             <td> 
-              {{sp.produit.prix_achat_unitaire_HT}}
-          </td>
+              {{sc.produit.prix_achat_unitaire_HT}}
+            </td>
             <td>
-                {{sp.qteDispo}}
+                {{sc.qteDispo}}
             </td>
           </tr>
         {% endfor%}  
@@ -50,6 +50,6 @@
     <div style="display: flex;flex-direction: column;align-items: flex-end;">
     <button style="background-color: purple;float: right;margin-right: 25px; width: 18%;margin-bottom: 20px;" id="print-button" class="btn btn-primary" >Imprimer</button>
     </div>
-    <h3 class="display-5 d-inline">Valeur Totale du Stock : <strong>{{v}}</strong> DA </h3>
+    <h3 class="display-5 d-inline">Valeur Totale du Stock du Centre {{c.code_centre}} : <strong>{{v}}</strong> DA </h3>
   </body>
 </html>

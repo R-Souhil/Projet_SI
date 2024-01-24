@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'javascript/script.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>Nouveau Transfert</title>
+  </head>
+
+  <body>
+    {% include 'header.html' %}
+    <h4> Créer un Nouveau Transfert </h4>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div style="display: flex;flex-direction: column;justify-content: space-between; gap: 2em;">
+            <span>
+            <a id="ADDProd" href="#" onclick="window.open('{% url "ajouterP" %}', 'newwindow'); return false;">Ajouter un Produit</a>
+            </span>
+        </div>
+        <br/>
+        <input
+        class="hid search"
+        type="text"
+        id="myInput"
+        onkeyup="SearchBar()"
+        placeholder="Rechercher un Produit ..."
+        />
+        <table class="table trecherche">
+          <thead>
+            <tr>
+              <th>Produit</th>
+              <th>Selectionner</th>
+              <th>Prix d'achat</th>
+              <th>Quantité</th>
+            </tr>
+          </thead>
+          <tbody id="tb">
+            {% for s in stock %}
+              <tr>
+                <td>{{ s.produit.designation_produit }}</td>
+                <td><input type="checkbox" name="produits" onchange="checkboxChanged(this)" value="{{ s.produit.code_produit }}"></td>
+                
+                <td><input type="number" id="priceCalc" value="{{ s.produit.prix_achat_unitaire_HT|floatformat:2 }}" readonly/></td>
+
+                <td><input type="number" name="quantite_{{ s.produit.code_produit }}" value="1" max="{{s.qteDispo}}" disabled onchange="updateTotal()"></td>
+              </tr>
+            {% endfor %}
+              <tr>
+                <td colspan="2"></td>
+                <td><strong>Montant Transfert :</strong></td>
+                <td><input type="number" name="montantT" id="montant" readonly></td>
+              </tr>
+          </tbody>
+        </table>
+        <input type="submit" value="Transferer">
+      </form>
+</body>
+</html>

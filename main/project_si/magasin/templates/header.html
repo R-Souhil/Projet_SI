@@ -2,8 +2,18 @@
 
   <nav>
     <ul class="favorite-tabs">
-     
-   <span class="dropdown">
+      
+      <span class="dropdown">
+        <li id="selectednav" style="color: #e9bcc6;" data-bs-toggle="dropdown" aria-expanded="false">Magasin Principal</li>
+        <ul class="dropdown-menu">
+          <li onclick="updateDropdown('Magasin Principal')">Magasin Principal</li>
+          <li onclick="updateDropdown('Centre1')">Centre1</li>
+          <li onclick="updateDropdown('Centre2')">Centre2</li>
+          <li onclick="updateDropdown('Centre3')">Centre3</li>
+        </ul>
+      </span>
+
+      <span class="dropdown">
         <li id="nav" data-bs-toggle="dropdown" aria-expanded="false">Gestion</li>
         <ul class="dropdown-menu">
           <li onclick="window.location.href='/centres'">Centres</li>
@@ -35,8 +45,8 @@
       <span class="dropdown">
         <li id="nav" data-bs-toggle="dropdown" aria-expanded="false">Transfert</li>
         <ul class="dropdown-menu">
-          <li onclick="window.location.href='/'">Nouveau Transfert</li>
-          <li onclick="window.location.href='/'">Liste Transferts</li>
+          <li onclick="window.location.href='/transferts/ajouter'">Nouveau Transfert</li>
+          <li onclick="window.location.href='/transferts'">Liste Transferts</li>
         </ul>
       </span>
 

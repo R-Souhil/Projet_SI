@@ -2,7 +2,8 @@ from django.urls import path
 from magasin import views
 
 urlpatterns = [
-    path('stock/', views.magasin, name='stock'), 
+    path('stock/', views.stock_magasin, name='stock'),
+    path('stock/centre/<int:pid>', views.stock_centre, name='stockCentre'), 
     ## url clients
     path('clients/',views.liste_clients, name='listeCl'),
     path('clients/ajouter',views.ajouter_client, name='ajouterCl'),
@@ -40,5 +41,9 @@ urlpatterns = [
     path('ventes/supprimer/<int:pid>/',views.supprimer_vente, name='supprimerV'),
     path('credits/',views.liste_credits, name='listeCrds'),
     path('credits/paiement/<int:pid>/',views.paiement_client, name='paiementCC'),
+    ## url transferts
+    path('transferts/',views.liste_transferts, name='listeT'),
+    path('transferts/ajouter',views.ajouter_transfert, name='ajouterT'),
+    path('transferts/supprimer/<int:pid>/',views.supprimer_transfert, name='supprimerT'),
     
 ]

@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'javascript/script.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>Liste Transferts</title>
+  </head>
+  <body>
+    {% include 'header.html' %}
+    <h4 class="display-5 d-inline">Liste des Transferts</h4>
+    
+    <table class="table trecherche">
+      <thead>
+        <th>N°</th>
+        <th>Centre</th>
+        <th>Montant</th>
+        <th>Date Transfert</th>
+        <th class="hid">Actions</th>
+      </thead>
+      {% for t in ts %}
+      <tbody>
+        <tr data-aos="fade-right" data-aos-anchor-placement="bottom-bottom">
+          <td>{{t.numero_transfert}}</td>
+          <td>Centre {{t.centre.code_centre}}</td>
+          <td>{{t.cout_transfert|floatformat:2}} DA</td>
+          <td>{{t.date_transfert}}</td>
+          <td class="hid">
+            <a class="btn btn-danger" href="{% url 'supprimerT' t.numero_transfert %}">Delete</a>
+          </td>
+        </tr>
+        {% endfor%} 
+      </tbody> 
+    </table>
+    <div style="display: flex;flex-direction: column;align-items: flex-end;">
+    <a style="float: right;margin-right: 25px; width: 18%; margin-bottom: 20px;" class="btn btn-primary " href="{% url 'ajouterT' %}">Ajouter un nouveau Transfert</a>
+    <button style="background-color: purple;float: right;margin-right: 25px; width: 18%;margin-bottom: 20px;" onclick="printPage()" id="print-button" class="btn btn-primary" >Imprimer</button>
+    </div>
+  </body>
+</html>

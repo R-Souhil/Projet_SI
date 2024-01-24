@@ -111,16 +111,33 @@ class StockProduit(models.Model):
         return self.stock.__str__() + " " + self.produit.__str__()
     
     
+class StockCentre(models.Model):
+    primary_key = models.CharField(max_length=254, primary_key=True)
+    stock = models.ForeignKey(Centre, on_delete=models.CASCADE)
+    produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    qteDispo = models.PositiveIntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        self.primary_key = str(self.stock) + str(self.produit)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.stock.__str__() + " " + self.produit.__str__()
+    
+    
 class Transfert(models.Model):
     numero_transfert = models.AutoField(primary_key=True)
     date_transfert = models.DateField(default=timezone.now)
-    quantite_transferee = models.IntegerField()
-    cout_transfert = models.FloatField(max_length=30)
-    produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    cout_transfert = models.FloatField(max_length=30,default=0)
     centre = models.ForeignKey(Centre, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.numero_transfert
+        return f"{self.numero_transfert}"
+    
+class ProduitTransfert(models.Model):
+    produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    transfert = models.ForeignKey(Transfert, on_delete=models.CASCADE)
+    quantite = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     
   
 class Vente(models.Model):
@@ -132,7 +149,7 @@ class Vente(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"self.numero_vente"
+        return f"{self.numero_vente}"
     
 class ProduitVente(models.Model):
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)

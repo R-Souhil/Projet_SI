@@ -1,8 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from .models import Magasin, Centre, Client, Produit, ProduitAchat, Employe, Vente, ProduitVente, PV, StockProduit, PaiementCreditClient, Fournisseur, Achat, Transfert, PaiementFournisseur, AnalyseDesVentes, AnalyseDesAchats
-from .forms import ProduitForm, ClientForm, EmployeForm, CentreForm, VenteForm, PaiementCreditClientForm, FournisseurForm, AchatForm, PaiementFournisseurForm
-
+from .models import Magasin, Centre, Client, Produit, ProduitAchat, Employe, Vente, ProduitTransfert, StockCentre, ProduitVente, PV, StockProduit, PaiementCreditClient, Fournisseur, Achat, Transfert, PaiementFournisseur, AnalyseDesVentes, AnalyseDesAchats
+from .forms import ProduitForm, ClientForm, EmployeForm, CentreForm, TransfertForm, VenteForm, PaiementCreditClientForm, FournisseurForm, AchatForm, PaiementFournisseurForm
 
 
 
@@ -47,7 +46,6 @@ def modifier_centre(request, pid):
         form = CentreForm(instance=centre)
     return render(request, 'gestion/centres/modifierCt.html', {'form': form, 'centre': centre})
 
-
 ## Gestion Clients
 
 def liste_clients(request):
@@ -88,7 +86,6 @@ def modifier_client(request, pid):
     else:
         form = ClientForm(instance=client)
     return render(request, 'gestion/clients/modifierCl.html', {'form': form, 'client': client})
-
 
 ## Gestion Employes
 
@@ -131,7 +128,6 @@ def modifier_employe(request, pid):
         form = EmployeForm(instance=employe)
     return render(request, 'gestion/employes/modifierE.html', {'form': form, 'employe': employe})
 
-
 ## Gestion Produits
  
 def liste_produits(request):
@@ -173,7 +169,6 @@ def modifier_produit(request, pid):
         form = ProduitForm(instance=produit)
     return render(request, 'gestion/produits/modifierP.html', {'form': form, 'produit': produit})
 
-
 ## Gestion Fournisseurs
 
 def liste_fournisseurs(request):
@@ -214,7 +209,6 @@ def modifier_fournisseur(request, pid):
     else:
         form = FournisseurForm(instance=fournisseur)
     return render(request, 'gestion/fournisseurs/modifierF.html', {'form': form, 'fournisseur': fournisseur})
-
 
 ## Gestion des Achats
 
@@ -267,7 +261,6 @@ def ajouter_achat(request):
         form = AchatForm()
     return render(request, 'achat/ajouterA.html', {'form': form, 'produits': Produit.objects.all()})    
     
-
 def supprimer_achat(request, pid):
     achat = get_object_or_404(Achat, numero_achat=pid)
     if request.method=='POST':
@@ -320,8 +313,7 @@ def paiement_fournisseur(request,pid):
         form = PaiementFournisseurForm()
     return render(request, 'achat/paiementF.html', {'form': form, 'f': frn})
 
-
-def magasin(request):
+def stock_magasin(request):
     try:
         s=Magasin.objects.get(code_magasin='1')
     except:
@@ -333,7 +325,17 @@ def magasin(request):
     context={'sp':sp, 'v':valeurTotal}
     return render(request, 'stock.html', context)
 
-## Gestion Vente
+def stock_centre(request,pid):
+    try:
+        c=Centre.objects.get(code_centre=pid)
+    except:
+        c=Centre.objects.create(code_centre=pid,nom_magasin='Centre'+pid)
+    valeurTotal = sum(stock.produit.prix_achat_unitaire_HT * stock.qteDispo for stock in StockCentre.objects.filter(stock=c))
+    sc = StockCentre.objects.filter(stock=c)
+    context={'sc':sc,'c':c, 'v':valeurTotal}
+    return render(request, 'stockCtr.html', context)
+
+## Gestion Ventes
 
 def liste_ventes(request):
     ventes=Vente.objects.all()
@@ -393,9 +395,8 @@ def ajouter_vente(request):
             return redirect('listeV')
     else:
         form = VenteForm()
-    return render(request, 'vente/ajouterV.html', {'form': form, 'stock': StockProduit.objects.all()}) 
+        return render(request, 'vente/ajouterV.html', {'form': form, 'stock': StockProduit.objects.all()}) 
     
-
 def supprimer_vente(request, pid):
     vente = get_object_or_404(Vente, numero_vente=pid)
     if request.method=='POST':
@@ -454,8 +455,87 @@ def paiement_client(request,pid):
         form = PaiementCreditClientForm()
     return render(request, 'vente/paiementClient.html', {'form': form, 'c': cl})
 
+## Gestion Transferts
 
+def liste_transferts(request):
+    transferts=Transfert.objects.all()
+    context={'ts':transferts}
+    return render(request,'transfert/transferts.html', context)
 
+def ajouter_transfert(request):
+    montant_Transfert = 0
+    if request.method == 'POST':
+        form = TransfertForm(request.POST)
+        if form.is_valid():
+            produits = request.POST.getlist('produits')
+            if not produits:
+                form.add_error(None, "Sélectionnez au moin un produit")
+                return render(request, 'transfert/ajouterT.html', {'form': form, 'stock': StockProduit.objects.all()})
+            transfert = form.save(commit=False)
+            transfert.save()
+            for p in produits:
+                quantite = float(request.POST.get('quantite_' + p))
+                montant = Produit.objects.get(pk=p).prix_achat_unitaire_HT * quantite
+                montant_Transfert += montant * quantite
+                prdtrns = ProduitTransfert(
+                    produit=Produit.objects.get(pk=p),
+                    transfert=transfert,
+                    quantite=quantite
+                    )
+                prdtrns.save()
+                stock = StockProduit.objects.get(produit=Produit.objects.get(pk=p))
+                stock.qteDispo -= quantite
+                if stock.qteDispo == 0:
+                    stock.delete()
+                else:
+                    stock.save()
+                try:
+                    stockCentre = StockCentre.objects.get(stock=transfert.centre, produit=Produit.objects.get(pk=p))
+                    stockCentre.qteDispo += quantite
+                    stockCentre.save()
+                except StockCentre.DoesNotExist:
+                    stockCentre = StockCentre(
+                        stock=transfert.centre,
+                        produit=Produit.objects.get(pk=p),
+                        qteDispo = quantite
+                    )
+                    stockCentre.save()
+            transfert.cout_transfert = montant_Transfert
+            transfert.save()
+            return redirect('listeT')
+    else:
+        form = TransfertForm()  
+        return render(request, 'transfert/ajouterT.html', {'form': form, 'stock': StockProduit.objects.all()})
 
+def supprimer_transfert(request, pid):
+    transfert = get_object_or_404(Transfert, numero_transfert=pid)
+    if request.method=='POST':
+        # supprimer le transferet diminuer le stock du centre et remplir le stock du magasin
+        tprds = ProduitTransfert.objects.filter(transfert=transfert)
+        for tprd in tprds:
+            try:
+                prdstock = StockProduit.objects.get(centre=transfert.centre,produit=tprd.produit)
+                prdstock.qteDispo += tprd.quantite
+                prdstock.save()
+            except StockProduit.DoesNotExist:
+                StockProduit.objects.create(
+                    produit=tprd.produit,
+                    stock=transfert.centre,
+                    qteDispo=tprd.quantite
+                )
+                prdstock.save()
+                
+            prdstockCtr = StockCentre.objects.get(centre=transfert.centre,produit=tprd.produit)
+            prdstockCtr.qteDispo -= tprd.quantite
+            if prdstock.qteDispo == 0:
+                prdstockCtr.delete()
+            else:
+                prdstockCtr.save()
+            tprd.delete()
+        transfert.delete()
+        return redirect('listeT')  
+    else:
+        context={'item':transfert, 'produits': ProduitTransfert.objects.filter(transfert=transfert)}
+        return render(request,'transfert/supprimerT.html',context)
 
 
