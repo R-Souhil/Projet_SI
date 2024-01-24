@@ -15,12 +15,13 @@ function updateDropdown(text) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+/*document.addEventListener('DOMContentLoaded', function () {
     var storedPage = sessionStorage.getItem('selectedPage');
     if (storedPage) {
       document.getElementById('selectednav').textContent = storedPage;
     }
   });
+*/
 
 function SearchBar() {
     
@@ -82,4 +83,8 @@ function updateTotal() {
     });
 
     document.getElementById('montant').value = total;
+
+    var montantPaye = document.getElementById('paiementfrn') || document.getElementById('paiementcl');
+
+    montantPaye.max =  document.getElementById('montant').value;
 }

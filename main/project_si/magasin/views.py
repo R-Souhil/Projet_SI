@@ -514,20 +514,20 @@ def supprimer_transfert(request, pid):
         tprds = ProduitTransfert.objects.filter(transfert=transfert)
         for tprd in tprds:
             try:
-                prdstock = StockProduit.objects.get(centre=transfert.centre,produit=tprd.produit)
+                prdstock = StockProduit.objects.get(produit=tprd.produit)
                 prdstock.qteDispo += tprd.quantite
                 prdstock.save()
             except StockProduit.DoesNotExist:
                 StockProduit.objects.create(
                     produit=tprd.produit,
-                    stock=transfert.centre,
+                    stock=Magasin.object.get(code_magasin=1),
                     qteDispo=tprd.quantite
                 )
                 prdstock.save()
                 
-            prdstockCtr = StockCentre.objects.get(centre=transfert.centre,produit=tprd.produit)
+            prdstockCtr = StockCentre.objects.get(stock=transfert.centre,produit=tprd.produit)
             prdstockCtr.qteDispo -= tprd.quantite
-            if prdstock.qteDispo == 0:
+            if prdstock.qteDispo <= 0:
                 prdstockCtr.delete()
             else:
                 prdstockCtr.save()

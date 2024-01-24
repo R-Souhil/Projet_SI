@@ -4,12 +4,12 @@
     <ul class="favorite-tabs">
       
       <span class="dropdown">
-        <li id="selectednav" style="color: #e9bcc6;" data-bs-toggle="dropdown" aria-expanded="false">Magasin Principal</li>
+        <li id="selectednav" style="color: #e9bcc6;" data-bs-toggle="dropdown" aria-expanded="false">Stock</li>
         <ul class="dropdown-menu">
-          <li onclick="updateDropdown('Magasin Principal')">Magasin Principal</li>
-          <li onclick="updateDropdown('Centre1')">Centre1</li>
-          <li onclick="updateDropdown('Centre2')">Centre2</li>
-          <li onclick="updateDropdown('Centre3')">Centre3</li>
+          <li onclick="window.location.href='/stock'">Magasin Principal</li>
+          <li onclick="window.location.href='/stock/centre/1'">Centre1</li>
+          <li onclick="window.location.href='/stock/centre/2'">Centre2</li>
+          <li onclick="window.location.href='/stock/centre/3'">Centre3</li>
         </ul>
       </span>
 
@@ -49,9 +49,6 @@
           <li onclick="window.location.href='/transferts'">Liste Transferts</li>
         </ul>
       </span>
-
-      <li id="nav" onclick="window.location.href='/stock'">Stock</li>
-
     </ul>
   </nav>
 </body>
